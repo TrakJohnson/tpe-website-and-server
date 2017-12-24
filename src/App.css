@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: whitesmoke;
+}
+
+#menu-bar {
+    margin: 0 5%;
+    border: 1px solid lightblue;
+    padding: 5%;
+}
+
+#page-title {
+    font-size: 28px;
+    display: inline;
+}
+
+#menu {
+    display: inline;
+}
+
+#content {
+    margin: 0 5%;
+    padding: 5%;
+    border: 1px solid lightblue;
+    text-align: center;
+}
+
+#generated-text {
+    width: 80%;
+    margin: 5px;
+    border: 3px solid lightgray;
+}
+
+button {
+
+}
+
+#generate-action {
+
+}
