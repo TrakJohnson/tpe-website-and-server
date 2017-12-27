@@ -14,19 +14,25 @@ class App extends Component {
         super();
         this.state = {current_text: []};
         this.root_link = "http://127.0.0.1:5000";
+
+        this.getText = this.getText.bind(this);
+        this.clear = this.clear.bind(this);
     }
 
     static cleanText(someText) {
         return bulkReplace(someText, {" ,": ",", " .": ".", " ’ ": "'", "\( ": "\(", " \)": "\)"})
     }
 
-    getText() {
+    getText(completeSentence) {
+        console.log(completeSentence);
         let request_body = JSON.stringify({
             text_name: "darwin",
             current: this.state.current_text,
-            n: 2
+            n: 2,
+            complete_sentence: completeSentence
         });
         console.log(request_body);
+
         fetch(this.root_link + '/generate_markov', {
             method: 'POST',
             headers: {
@@ -44,6 +50,10 @@ class App extends Component {
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
+    clear() {
+        this.setState({current_text: []})
+    }
+
     render() {
         return (
         <div className="wrapper">
@@ -57,8 +67,9 @@ class App extends Component {
             </div>
             <div id="content">
                 Générateur
-                <button onClick={this.getText.bind(this)}>Générer le mot suivant</button>
-                <button onClick={this.getText.bind(this)}>Générer toute la phrase</button>
+                <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
+                <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
+                <button onClick={this.clear}>Clear</button>
                 <br/>
                 <textarea readOnly={true} value={App.cleanText(this.state.current_text.join(" "))} id="generated-text"/>
                 <hr/>

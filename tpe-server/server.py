@@ -38,12 +38,15 @@ def generate_markov():
         print(f"'{text_name}' hasn't been pickled yet")
         m.learn(get_text(f"{str(corpora_dir)}\\{text_name}.txt", is_full_path=True))
         m.save_markov(ngram_file_path)
+        print("Learning done.")
 
-    print("Learning done")
-    if not current:
+    if complete_sentence:
+        current = m.generate_sentence(current)
+    elif not current:
         current = m.get_first_words()
     else:
         current.extend(m.next_word(current)["next"])
+
     print(current)
     return jsonify({
         "current_sentence": current
