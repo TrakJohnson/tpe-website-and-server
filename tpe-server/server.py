@@ -30,13 +30,13 @@ def generate_markov():
 
     assert len(current) >= n or len(current) == 0
     m = MarkovChain(n=n)
-    ngram_file_path = f"{str(ngram_dir)}\\{text_name}.pkl"  # TODO convert that to Path only
+    ngram_file_path = f"{ngram_dir / text_name}.pkl"
 
     try:
         m.load_markov(ngram_file_path)
     except FileNotFoundError:
         print(f"'{text_name}' hasn't been pickled yet")
-        m.learn(get_text(f"{str(corpora_dir)}\\{text_name}.txt", is_full_path=True))
+        m.learn(get_text(f"{corpora_dir / text_name}.txt", is_full_path=True))
         m.save_markov(ngram_file_path)
         print("Learning done.")
 
