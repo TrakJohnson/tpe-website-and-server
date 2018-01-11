@@ -18,7 +18,7 @@ def test_markov_chain():
 def test_cfg():
     c = ContextFreeGrammar()
     c.learn("My name is John, I like cats.")
-    print(c.grammar)
+    print(c.cfg)
 
 
 def test_clean_output():

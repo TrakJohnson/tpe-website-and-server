@@ -7,13 +7,20 @@ Plan:
 """
 
 from typing import List, Tuple, Dict
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk import ngrams
 from collections import defaultdict
 import random
-import stat_parser
 import codecs
 import pickle
+from pathlib import Path
+import nltk
+from nltk import ngrams, PCFG
+from nltk.tokenize import sent_tokenize, word_tokenize
+import stat_parser
+import json
+import pprint
+
+
+pp = pprint.PrettyPrinter()
 
 
 # -- Text Processing Utility Functions
@@ -30,7 +37,7 @@ def get_text(text_name: str, short=False, is_full_path=False) -> str:
         file_name = text_name
     else:
         file_name = f"corpora/{text_name}{suffix}.txt"
-    with codecs.open(file_name) as f:
+    with codecs.open(file_name, encoding="UTF-8") as f:
         raw_str = f.read()
     # TODO add more rules
     raw_str = bulk_replace(raw_str, [("\"", " "), ("  ", " "), ("_", "")])
@@ -46,6 +53,12 @@ def bulk_replace(s: str, replace_rules: List[Tuple[str, str]]) -> str:
 
 def clean_output(output: str) -> str:
     return bulk_replace(output, [(" ,", ","), (" .", "."), (" ’ ", "'"), ("( ", "("), (" )", ")")])
+
+
+def default_to_regular(d):
+    if isinstance(d, defaultdict):
+        d = {k: default_to_regular(v) for k, v in d.items()}
+    return d
 
 
 # -- Markov chains (aka ngrams)
@@ -120,7 +133,6 @@ class MarkovChain:
 
         if not counter:
             return state
-
         return self.generate_sentence(state=state, counter=counter - 1)
 
     def get_clean_sentence(self):
@@ -145,21 +157,92 @@ class MarkovChain:
         self.memory = data[1]
 
 
-# CFG
+# CFG / PCFG
+preprocessed_grammars_path = Path("preprocessed_grammars")
+
+
 class ContextFreeGrammar:
     def __init__(self):
-        self.grammar = []
+        self.pcfg_rules = defaultdict(lambda: defaultdict(int))
+        self.start_symbols = []
 
-    def learn(self, text: str) -> None:
+    def learn_text_full(self, text: str) -> None:
+        for sentence in sent_tokenize(text):
+            self.learn_sentence(sentence)
+        self.make_cfg_probabilities()
+
+    def learn_text_sample(self, text: str, samples=100) -> None:
+        for sentence in random.sample(set(sent_tokenize(text)), samples):
+            self.learn_sentence(sentence)
+        self.make_cfg_probabilities()
+
+    def make_cfg_probabilities(self):
+        for lhs, value in self.pcfg_rules.items():
+            total = value["--TOTAL--"]
+            for rhs, num in value.items():
+                self.pcfg_rules[lhs][rhs] = round(self.pcfg_rules[lhs][rhs] / total, 3)
+            del value["--TOTAL--"]
+
+    def learn_sentence(self, sentence: str) -> None:
         p = stat_parser.Parser()
-        self.grammar.extend(p.parse(text).productions())
 
-    def derive_random(self, start_symbol=""):
-        pass
+        has_failed = True
+        while has_failed:
+            try:
+                productions = p.parse(sentence).productions()
+                has_failed = False  # no error
+            except TypeError:
+                pass  # resart the loop
+
+        self.start_symbols.append(productions[0].lhs())
+
+        for production in productions:
+            left, right = production.lhs(), production.rhs()
+            if len(right) == 1 and type(right[0]) is str:
+                right = right[0]
+            self.pcfg_rules[left][right] += 1
+            self.pcfg_rules[left]["--TOTAL--"] += 1
+
+    def derive_random(self) -> str:
+        """
+        Derive a random sentence from the rules
+        :return: the sentence string
+        """
+        start_symbol = random.choice(self.start_symbols)
+        sentence = [start_symbol]
+        continue_derivation = True
+        while continue_derivation:
+            continue_derivation = not all(isinstance(x, str) for x in sentence)
+            for ind, tag in enumerate(sentence):
+                if nltk.grammar.is_nonterminal(tag):
+                    del sentence[ind]
+                    outputs, probas = [], []
+                    print(self.pcfg_rules[tag])
+                    if "+" in str(tag):
+                        tag = nltk.grammar.Nonterminal(random.choice(str(tag).split("+")))
+                    print("TAG", tag)
+                    for k, v in self.pcfg_rules[tag].items():
+                        outputs.append(k)
+                        probas.append(v)
+                    assert len(probas) == len(outputs) != 0
+                    new_choice = random.choices(outputs, weights=probas, k=1)[0]
+                    if isinstance(new_choice, str):
+                        new_choice = [new_choice]
+                    sentence = sentence[ind:] + list(new_choice) + sentence[:ind]
+        print(sentence)
+        # replace by a randomly weighted choice
+        return ""
+
+    def save_pcfg(self, name: str):
+        with open(preprocessed_grammars_path / (name + ".pkl"), "wb") as f:
+            pickle.dump(default_to_regular(self.pcfg_rules), f)
 
 
 if __name__ == '__main__':
     m = MarkovChain(n=2, debug=True)
-    m.learn(get_text("darwin"))
+    m.learn(get_text("C:\\Users\\Theo\\Downloads\\meyer_sanitized_1.txt", is_full_path=True))
     sentence = m.get_clean_sentence()
     print(sentence)
+
+# add to text dependency based vs constituency based
+

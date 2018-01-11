@@ -10,6 +10,37 @@ function bulkReplace(retStr, obj) {
 }
 
 class App extends Component {
+
+    render() {
+        return (
+        <div className="wrapper">
+            <div id="menu-bar">
+                <div id="page-title">
+                    Projet TPE
+                </div>
+                <div id="menu">
+
+                </div>
+            </div>
+            <div id="content">
+                <Markov/>
+                <hr/>
+                <div>
+                    1 - Introduction <br/>
+                    2 - Chaînes de markov <br/>
+                    3 - Grammaire sans contexte <br/>
+                    4 - Explication de l'algorithme <br/>
+                    5 - Exemples de textes générés <br/>
+                    6 - Applications et intérêt
+                </div>
+            </div>
+        </div>
+        );
+    }
+}
+
+
+class Markov extends Component {
     constructor() {
         super();
         this.state = {current_text: []};
@@ -44,7 +75,7 @@ class App extends Component {
             resp => resp.json()
         ).then(json_resp => {
             this.setState({
-                current_text: json_resp.current_sentence
+                current_text: json_resp["current_sentence"]
             });
             console.log(json_resp)
         }).catch(err => console.log("FETCH FAILURE " + err))
@@ -55,36 +86,16 @@ class App extends Component {
     }
 
     render() {
-        return (
-        <div className="wrapper">
-            <div id="menu-bar">
-                <div id="page-title">
-                    Projet TPE
-                </div>
-                <div id="menu">
-
-                </div>
-            </div>
-            <div id="content">
-                Générateur
-                <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
-                <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
-                <button onClick={this.clear}>Clear</button>
-                <br/>
-                <textarea readOnly={true} value={App.cleanText(this.state.current_text.join(" "))} id="generated-text"/>
-                <hr/>
-                <div>
-                    1 - Introduction <br/>
-                    2 - Chaînes de markov <br/>
-                    3 - Grammaire sans contexte <br/>
-                    4 - Explication de l'algorithme <br/>
-                    5 - Exemples de textes générés <br/>
-                    6 - Applications et intérêt
-                </div>
-            </div>
-        </div>
-        );
+        return <div id="markov-wrapper">
+            <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
+            <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
+            <button onClick={this.clear}>Clear</button>
+            <br/>
+            <textarea readOnly={true} id="generated-text"
+                      value={Markov.cleanText(this.state.current_text.join(" "))}/>
+        </div>;
     }
 }
+
 
 export default App;
