@@ -23,10 +23,10 @@ def homepage():
 @app.route("/generate_markov", methods=["POST"])
 def generate_markov():
     request_data = json.loads(request.data)
-    text_name = request_data.get("text_name")
+    text_name = request_data.get("textName")
     current = request_data.get("current")
     n = request_data.get("n")
-    complete_sentence = request_data.get("complete_sentence")
+    complete_sentence = request_data.get("completeSentence")
 
     assert len(current) >= n or len(current) == 0
     m = MarkovChain(n=n)
@@ -49,7 +49,7 @@ def generate_markov():
 
     print(current)
     return jsonify({
-        "current_sentence": current
+        "currentSentence": current
     })
 
 

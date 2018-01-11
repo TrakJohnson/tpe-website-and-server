@@ -54,11 +54,11 @@ class Markov extends Component {
     constructor() {
         super();
         this.state = {
-            current_text: [],
-            text_name: "darwin",
+            currentText: [],
+            textName: "darwin",
             n: 2,
         };
-        this.root_link = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
+        this.rootLink = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
@@ -70,33 +70,33 @@ class Markov extends Component {
 
     getText(completeSentence) {
         console.log(completeSentence);
-        let request_body = JSON.stringify({
-            text_name: this.state.text_name,
-            current: this.state.current_text,
+        let responseBody = JSON.stringify({
+            textName: this.state.textName,
+            current: this.state.currentText,
             n: this.state.n,
-            complete_sentence: completeSentence
+            completeSentence: completeSentence
         });
-        console.log(request_body);
+        console.log(responseBody);
 
-        fetch(this.root_link + '/generate_markov', {
+        fetch(this.rootLink + '/generate_markov', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: request_body
+            body: responseBody
         }).then(
             resp => resp.json()
-        ).then(json_resp => {
+        ).then(jsonResp => {
             this.setState({
-                current_text: json_resp["current_sentence"]
+                currentText: jsonResp["currentSentence"]
             });
-            console.log(json_resp)
+            console.log(jsonResp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
     clear() {
-        this.setState({current_text: []})
+        this.setState({currentText: []})
     }
 
     render() {
@@ -106,9 +106,9 @@ class Markov extends Component {
             <button onClick={this.clear}>Clear</button>
             <br/>
             <textarea readOnly={true} id="generated-text"
-                      value={Markov.cleanText(this.state.current_text.join(" "))}/>
+                      value={Markov.cleanText(this.state.currentText.join(" "))}/>
             <br/>
-            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
+            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
                 {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
             </select>
             <input type="range"
@@ -119,6 +119,7 @@ class Markov extends Component {
                    onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
             />
             {this.state.n}
+            {/*TODO make generator work when n != 2*/}
         </div>;
     }
 }

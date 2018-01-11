@@ -37,7 +37,7 @@ def get_text(text_name: str, short=False, is_full_path=False) -> str:
     if is_full_path:
         file_name = text_name
     else:
-        file_name = f"corpora/{text_name}{suffix}.txt"
+        file_name = f"corpora/{textName}{suffix}.txt"
     with codecs.open(file_name, encoding="UTF-8") as f:
         raw_str = f.read()
     # TODO add more rules
