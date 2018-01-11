@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 
+// TODO make text names more consistent and displayable
+const TEXT_NAMES = [
+    "darwin",
+    "frankenstein",
+    "oldmanandthesea",
+    "trump_speeches",
+    "ulysses_ed11",
+    "war_and_peace",
+];
+
 
 function bulkReplace(retStr, obj) {
     for (let x in obj) {
@@ -43,8 +53,12 @@ class App extends Component {
 class Markov extends Component {
     constructor() {
         super();
-        this.state = {current_text: []};
-        this.root_link = "http://127.0.0.1:5000";
+        this.state = {
+            current_text: [],
+            text_name: "darwin",
+            n: 2,
+        };
+        this.root_link = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
@@ -57,9 +71,9 @@ class Markov extends Component {
     getText(completeSentence) {
         console.log(completeSentence);
         let request_body = JSON.stringify({
-            text_name: "darwin",
+            text_name: this.state.text_name,
             current: this.state.current_text,
-            n: 2,
+            n: this.state.n,
             complete_sentence: completeSentence
         });
         console.log(request_body);
@@ -93,6 +107,18 @@ class Markov extends Component {
             <br/>
             <textarea readOnly={true} id="generated-text"
                       value={Markov.cleanText(this.state.current_text.join(" "))}/>
+            <br/>
+            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
+                {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
+            </select>
+            <input type="range"
+                   name="n-gram size"
+                   min={1}
+                   max={4}
+                   value={this.state.n}
+                   onChange={(e) => this.setState({n: Number(e.target.value)})}
+            />
+            {this.state.n}
         </div>;
     }
 }
