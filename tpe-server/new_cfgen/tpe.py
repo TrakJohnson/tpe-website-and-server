@@ -13,6 +13,7 @@ import codecs
 import pickle
 from pathlib import Path
 import nltk
+# TODO nltk.download('punkt')
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser

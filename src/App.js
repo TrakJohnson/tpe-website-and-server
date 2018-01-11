@@ -116,7 +116,7 @@ class Markov extends Component {
                    min={1}
                    max={4}
                    value={this.state.n}
-                   onChange={(e) => this.setState({n: Number(e.target.value)})}
+                   onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
             />
             {this.state.n}
         </div>;
