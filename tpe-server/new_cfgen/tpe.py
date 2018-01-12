@@ -12,20 +12,23 @@ import random
 import codecs
 import pickle
 from pathlib import Path
+import operator
+import json
+import pprint
 import nltk
 # TODO nltk.download('punkt')
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
-import json
-import pprint
 
 
 pp = pprint.PrettyPrinter()
+grammar_dir = Path("preprocessed_grammars")
+ngram_dir = Path("preprocessed_ngrams")
 
 
 # -- Text Processing Utility Functions
-def get_text(text_name: str, short=False, is_full_path=False) -> str:
+def get_text(text_name: str, short=False, is_full_path=False, corpora_path=Path("corpora")) -> str:
     """
     Get the text from a file
     :param text_name: the name of the text (will be searched in corpora/) or a full path
@@ -37,7 +40,7 @@ def get_text(text_name: str, short=False, is_full_path=False) -> str:
     if is_full_path:
         file_name = text_name
     else:
-        file_name = f"corpora/{textName}{suffix}.txt"
+        file_name = corpora_path / f"{text_name}{suffix}.txt"
     with codecs.open(file_name, encoding="UTF-8") as f:
         raw_str = f.read()
     # TODO add more rules
@@ -64,11 +67,12 @@ def default_to_regular(d):
 
 # -- Markov chains (aka ngrams)
 class MarkovChain:
-    def __init__(self, n: int, debug=False):
+    def __init__(self, n: int, debug=False, storage_root=ngram_dir):
         self.n = n
         self.memory = {"words": defaultdict(list), "proba": defaultdict(list)}
         self.starting = []
         self.debug = debug
+        self.storage_root = storage_root
 
     def learn(self, text: str):
         """
@@ -143,29 +147,31 @@ class MarkovChain:
         if self.debug:
             print(stuff)
 
-    def save_markov(self, file_path):
+    def save_markov(self, name: str):
         """
         Save the ngram dict and the starting words to file
         :return: nothin'
         """
-        with open(file_path, "wb") as f:
+        with open(self.storage_root / f"{name}_{self.n}.pkl", "wb") as f:
             pickle.dump([self.starting, self.memory], f)
 
-    def load_markov(self, file_path):
-        with open(file_path, "rb") as f:
+    def load_markov(self, name):
+        with open(self.storage_root / f"{name}_{self.n}.pkl", "rb") as f:
             data = pickle.load(f)
-        self.starting = data[0]
-        self.memory = data[1]
+        self.starting, self.memory = data
 
 
 # CFG / PCFG
-preprocessed_grammars_path = Path("preprocessed_grammars")
-
-
 class ContextFreeGrammar:
-    def __init__(self):
+    def __init__(self, debug=False, storage_root=grammar_dir):
         self.pcfg_rules = defaultdict(lambda: defaultdict(int))
         self.start_symbols = []
+        self.debug = debug
+        self.storage_root = storage_root
+
+    def debug_print(self, *args, **kwargs):
+        if self.debug:
+            print(*args, **kwargs)
 
     def learn_text_full(self, text: str) -> None:
         for sentence in sent_tokenize(text):
@@ -173,7 +179,8 @@ class ContextFreeGrammar:
         self.make_cfg_probabilities()
 
     def learn_text_sample(self, text: str, samples=100) -> None:
-        for sentence in random.sample(set(sent_tokenize(text)), samples):
+        for ind, sentence in enumerate(random.sample(set(sent_tokenize(text)), samples)):
+            print(ind, len(sentence))
             self.learn_sentence(sentence)
         self.make_cfg_probabilities()
 
@@ -204,46 +211,70 @@ class ContextFreeGrammar:
             self.pcfg_rules[left][right] += 1
             self.pcfg_rules[left]["--TOTAL--"] += 1
 
-    def derive_random(self) -> str:
+    def derive(self, left_most=False) -> str:
         """
         Derive a random sentence from the rules
+        :arg left_most: if true, only take the most probable rhs instead of random with weights
         :return: the sentence string
         """
         start_symbol = random.choice(self.start_symbols)
-        sentence = [start_symbol]
+        if "+" in str(start_symbol):
+            # TODO really make this work correctly
+            sentence = [nltk.grammar.Nonterminal(i) for i in str(start_symbol).split("+")]
+        else:
+            sentence = [start_symbol]
+        pp.pprint(self.pcfg_rules)
+        self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
         while continue_derivation:
-            continue_derivation = not all(isinstance(x, str) for x in sentence)
-            for ind, tag in enumerate(sentence):
+            ind = 0
+            total = len(sentence)
+            while ind < total:
+                tag = sentence[ind]
                 if nltk.grammar.is_nonterminal(tag):
                     del sentence[ind]
                     outputs, probas = [], []
-                    print(self.pcfg_rules[tag])
-                    if "+" in str(tag):
-                        tag = nltk.grammar.Nonterminal(random.choice(str(tag).split("+")))
-                    print("TAG", tag)
+                    self.debug_print("TAG:", tag)
+                    self.debug_print("AVAILABLE:", self.pcfg_rules[tag])
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)
                     assert len(probas) == len(outputs) != 0
-                    new_choice = random.choices(outputs, weights=probas, k=1)[0]
+
+                    if left_most:
+                        max_choice_index, _ = max(enumerate(probas), key=operator.itemgetter(1))
+                        new_choice = outputs[max_choice_index]
+                    else:
+                        new_choice = random.choices(outputs, weights=probas, k=1)[0]
+
                     if isinstance(new_choice, str):
                         new_choice = [new_choice]
-                    sentence = sentence[ind:] + list(new_choice) + sentence[:ind]
-        print(sentence)
-        # replace by a randomly weighted choice
-        return ""
+                    sentence[ind:ind] = list(new_choice)
+                ind += 1
 
-    def save_pcfg(self, name: str):
-        with open(preprocessed_grammars_path / (name + ".pkl"), "wb") as f:
-            pickle.dump(default_to_regular(self.pcfg_rules), f)
+            # check if derivation needs to be continued
+            continue_derivation = not all(isinstance(x, str) for x in sentence)
+            self.debug_print("SENTENCE : ", sentence)
+
+        # replace by a randomly weighted choice
+        return " ".join(sentence)
+
+    def save_pcfg(self, name: str) -> None:
+        with open(self.storage_root / f"{name}.pkl", "wb") as f:
+            pickle.dump([
+                default_to_regular(self.start_symbols),
+                default_to_regular(self.pcfg_rules)
+            ], f)
+
+    def load_pcfg(self, name: str) -> None:
+        with open(self.storage_root / f"{name}.pkl", "rb") as f:
+            print("LOAD PCFG", self.storage_root / f"{name}.pkl")
+            self.start_symbols, self.pcfg_rules = pickle.load(f)
 
 
 if __name__ == '__main__':
-    m = MarkovChain(n=2, debug=True)
-    m.learn(get_text("C:\\Users\\Theo\\Downloads\\meyer_sanitized_1.txt", is_full_path=True))
-    sentence = m.get_clean_sentence()
-    print(sentence)
-
+    grammar = ContextFreeGrammar()
+    grammar.learn_text_sample(get_text("war_and_peace"), 1)
+    grammar.derive()
 # add to text dependency based vs constituency based
 

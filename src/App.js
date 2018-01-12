@@ -19,6 +19,11 @@ function bulkReplace(retStr, obj) {
     return retStr;
 }
 
+function cleanText(text) {
+    return bulkReplace(text, {" ,": ",", " .": ".", " ’ ": "'", "\( ": "\(", " \)": "\)"})
+}
+
+
 class App extends Component {
 
     render() {
@@ -34,6 +39,10 @@ class App extends Component {
             </div>
             <div id="content">
                 <Markov/>
+                <br/><br/>
+                <hr/>
+                <br/><br/>
+                <PCFG/>
                 <hr/>
                 <div>
                     1 - Introduction <br/>
@@ -70,33 +79,33 @@ class Markov extends Component {
 
     getText(completeSentence) {
         console.log(completeSentence);
-        let responseBody = JSON.stringify({
-            textName: this.state.textName,
-            current: this.state.currentText,
+        let request_body = JSON.stringify({
+            text_name: this.state.text_name,
+            current: this.state.current_text,
             n: this.state.n,
-            completeSentence: completeSentence
+            complete_sentence: completeSentence
         });
-        console.log(responseBody);
+        console.log(request_body);
 
-        fetch(this.rootLink + '/generate_markov', {
+        fetch(this.root_link + '/generate_markov', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: responseBody
+            body: request_body
         }).then(
             resp => resp.json()
-        ).then(jsonResp => {
+        ).then(json_resp => {
             this.setState({
-                currentText: jsonResp["currentSentence"]
+                current_text: json_resp["current_sentence"]
             });
-            console.log(jsonResp)
+            console.log(json_resp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
     clear() {
-        this.setState({currentText: []})
+        this.setState({current_text: []})
     }
 
     render() {
@@ -106,9 +115,9 @@ class Markov extends Component {
             <button onClick={this.clear}>Clear</button>
             <br/>
             <textarea readOnly={true} id="generated-text"
-                      value={Markov.cleanText(this.state.currentText.join(" "))}/>
+                      value={cleanText(this.state.current_text.join(" "))}/>
             <br/>
-            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
+            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
                 {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
             </select>
             <input type="range"
@@ -119,10 +128,64 @@ class Markov extends Component {
                    onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
             />
             {this.state.n}
-            {/*TODO make generator work when n != 2*/}
         </div>;
     }
 }
+
+class PCFG extends Component {
+    constructor() {
+        super();
+        this.state = {
+            current_text: "",
+            text_name: "darwin",
+        };
+        this.root_link = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
+
+        this.getText = this.getText.bind(this);
+        this.clear = this.clear.bind(this);
+    }
+
+    getText() {
+        let request_body = JSON.stringify({
+            text_name: this.state.text_name
+        });
+        console.log(request_body);
+
+        fetch(this.root_link + '/generate_pcfg', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: request_body
+        }).then(
+            resp => resp.json()
+        ).then(json_resp => {
+            this.setState({
+                current_text: json_resp["current_sentence"]
+            });
+            console.log(json_resp)
+        }).catch(err => console.log("FETCH FAILURE " + err))
+    }
+
+    clear() {
+        this.setState({current_text: ""})
+    }
+
+    render() {
+        return <div id="pcfg-wrapper">
+            <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
+            <button onClick={this.clear}>Clear</button>
+            <br/>
+            <textarea readOnly={true} id="generated-text" value={cleanText(this.state.current_text)}/>
+            <br/>
+            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
+                {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
+            </select>
+        </div>;
+    }
+}
+
 
 
 export default App;
