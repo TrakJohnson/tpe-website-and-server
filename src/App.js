@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 
 // TODO make text names more consistent and displayable
@@ -10,6 +10,7 @@ const TEXT_NAMES = [
     "ulysses_ed11",
     "war_and_peace",
 ];
+const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
 
 function bulkReplace(retStr, obj) {
@@ -31,32 +32,32 @@ class App extends Component {
 
     render() {
         return (
-        <div className="wrapper">
-            <div id="menu-bar">
-                <div id="page-title">
-                    Projet TPE
-                </div>
-                <div id="menu">
+            <div className="wrapper">
+                <div id="menu-bar">
+                    <div id="page-title">
+                        Projet TPE
+                    </div>
+                    <div id="menu">
 
+                    </div>
+                </div>
+                <div id="content">
+                    <Markov/>
+                    <br/><br/>
+                    <hr/>
+                    <br/><br/>
+                    <PCFG/>
+                    <hr/>
+                    <div>
+                        1 - Introduction <br/>
+                        2 - Chaînes de markov <br/>
+                        3 - Grammaire sans contexte <br/>
+                        4 - Explication de l'algorithme <br/>
+                        5 - Exemples de textes générés <br/>
+                        6 - Applications et intérêt
+                    </div>
                 </div>
             </div>
-            <div id="content">
-                <Markov/>
-                <br/><br/>
-                <hr/>
-                <br/><br/>
-                <PCFG/>
-                <hr/>
-                <div>
-                    1 - Introduction <br/>
-                    2 - Chaînes de markov <br/>
-                    3 - Grammaire sans contexte <br/>
-                    4 - Explication de l'algorithme <br/>
-                    5 - Exemples de textes générés <br/>
-                    6 - Applications et intérêt
-                </div>
-            </div>
-        </div>
         );
     }
 }
@@ -70,40 +71,35 @@ class Markov extends Component {
             textName: "darwin",
             n: 2,
         };
-        this.rootLink = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
     }
 
-    static cleanText(someText) {
-        return bulkReplace(someText, {" ,": ",", " .": ".", " ’ ": "'", "\( ": "\(", " \)": "\)"})
-    }
-
     getText(completeSentence) {
         console.log(completeSentence);
-        let request_body = JSON.stringify({
+        let requestBody = JSON.stringify({
             textName: this.state.textName,
             current: this.state.currentText,
             n: this.state.n,
-            complete_sentence: completeSentence
+            completeSentence: completeSentence
         });
-        console.log(request_body);
+        console.log(requestBody);
 
-        fetch(this.root_link + '/generate_markov', {
+        fetch(ROOT_LINK + '/generate_markov', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: request_body
+            body: requestBody
         }).then(
             resp => resp.json()
-        ).then(json_resp => {
+        ).then((jsonResp) => {
             this.setState({
-                currentText: json_resp["current_sentence"]
+                currentText: jsonResp["currentSentence"]
             });
-            console.log(json_resp)
+            console.log(jsonResp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
@@ -142,17 +138,16 @@ class PCFG extends Component {
             currentText: "",
             textName: "darwin",
         };
-        this.root_link = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
     }
 
     getText() {
-        let request_body = JSON.stringify({
+        let requestBody = JSON.stringify({
             textName: this.state.textName
         });
-        console.log(request_body);
+        console.log(requestBody);
 
         fetch(this.root_link + '/generate_pcfg', {
             method: 'POST',
@@ -160,15 +155,15 @@ class PCFG extends Component {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: request_body
+            body: requestBody
         }).then(
             resp => resp.json()
-        ).then(json_resp => {
+        ).then((jsonResp) => {
             this.setState({
-                currentText: json_resp["current_sentence"]
+                currentText: jsonResp["currents_sentence"]
             });
-            console.log(json_resp)
-        }).catch(err => console.log("FETCH FAILURE " + err))
+            console.log(jsonResp)
+        }).catch((err) => console.log("FETCH FAILURE " + err))
     }
 
     clear() {
@@ -188,7 +183,6 @@ class PCFG extends Component {
         </div>;
     }
 }
-
 
 
 export default App;

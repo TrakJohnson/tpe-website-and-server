@@ -48,7 +48,7 @@ def generate_markov():
         current.extend(m.next_word(current)["next"])
 
     return jsonify({
-        "current_sentence": current
+        "currentSentence": current
     })
 
 
