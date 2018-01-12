@@ -83,8 +83,8 @@ class Markov extends Component {
     getText(completeSentence) {
         console.log(completeSentence);
         let request_body = JSON.stringify({
-            text_name: this.state.text_name,
-            current: this.state.current_text,
+            textName: this.state.textName,
+            current: this.state.currentText,
             n: this.state.n,
             complete_sentence: completeSentence
         });
@@ -101,14 +101,14 @@ class Markov extends Component {
             resp => resp.json()
         ).then(json_resp => {
             this.setState({
-                current_text: json_resp["current_sentence"]
+                currentText: json_resp["current_sentence"]
             });
             console.log(json_resp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
     clear() {
-        this.setState({current_text: []})
+        this.setState({currentText: []})
     }
 
     render() {
@@ -118,10 +118,10 @@ class Markov extends Component {
             <button onClick={this.clear}>Clear</button>
             <br/>
             <textarea readOnly={true} id="generated-text"
-                      value={cleanText(this.state.current_text.join(" "))}/>
+                      value={cleanText(this.state.currentText.join(" "))}/>
             <br/>
-            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
-                {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
+            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
+                {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
             </select>
             <input type="range"
                    name="n-gram size"
@@ -139,8 +139,8 @@ class PCFG extends Component {
     constructor() {
         super();
         this.state = {
-            current_text: "",
-            text_name: "darwin",
+            currentText: "",
+            textName: "darwin",
         };
         this.root_link = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
@@ -150,7 +150,7 @@ class PCFG extends Component {
 
     getText() {
         let request_body = JSON.stringify({
-            text_name: this.state.text_name
+            textName: this.state.textName
         });
         console.log(request_body);
 
@@ -165,14 +165,14 @@ class PCFG extends Component {
             resp => resp.json()
         ).then(json_resp => {
             this.setState({
-                current_text: json_resp["current_sentence"]
+                currentText: json_resp["current_sentence"]
             });
             console.log(json_resp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
     clear() {
-        this.setState({current_text: ""})
+        this.setState({currentText: ""})
     }
 
     render() {
@@ -180,10 +180,10 @@ class PCFG extends Component {
             <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
-            <textarea readOnly={true} id="generated-text" value={cleanText(this.state.current_text)}/>
+            <textarea readOnly={true} id="generated-text" value={cleanText(this.state.currentText)}/>
             <br/>
-            <select value={this.state.text_name} onChange={(e) => this.setState({text_name: e.target.value})}>
-                {TEXT_NAMES.map((text_name) => <option key={text_name}>{text_name}</option>)}
+            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
+                {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
             </select>
         </div>;
     }
