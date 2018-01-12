@@ -6,6 +6,7 @@ Plan:
   - website
 """
 
+# system
 from typing import List, Tuple, Dict
 from collections import defaultdict
 import random
@@ -15,37 +16,14 @@ from pathlib import Path
 import operator
 import json
 import pprint
-import nltk
-# TODO nltk.download('punkt')
+# language
+import nltk # TODO nltk.download('punkt')
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
 
 
 pp = pprint.PrettyPrinter()
-grammar_dir = Path("preprocessed_grammars")
-ngram_dir = Path("preprocessed_ngrams")
-
-
-# -- Text Processing Utility Functions
-def get_text(text_name: str, short=False, is_full_path=False, corpora_path=Path("corpora")) -> str:
-    """
-    Get the text from a file
-    :param text_name: the name of the text (will be searched in corpora/) or a full path
-    :param short: if text from corpora, take the short version (if it exists)
-    :param is_full_path: set it to True to use a full path instead of corpora folder
-    :return: a nice clean string ready to be tokenized
-    """
-    suffix = "_short" if short else ""
-    if is_full_path:
-        file_name = text_name
-    else:
-        file_name = corpora_path / f"{text_name}{suffix}.txt"
-    with codecs.open(file_name, encoding="UTF-8") as f:
-        raw_str = f.read()
-    # TODO add more rules
-    raw_str = bulk_replace(raw_str, [("\"", " "), ("  ", " "), ("_", "")])
-    return raw_str
 
 
 def bulk_replace(s: str, replace_rules: List[Tuple[str, str]]) -> str:
@@ -65,14 +43,38 @@ def default_to_regular(d):
     return d
 
 
+class AbstractTextGenerator:
+    def __init__(self, root_path: Path):
+        self.root_path = root_path
+
+    def get_text(self, text_name: str, short=False, is_full_path=False):
+        """
+        Get the text from a file
+        :param text_name: the name of the text (will be searched in corpora/) or a full path
+        :param short: if text from corpora, take the short version (if it exists)
+        :param is_full_path: set it to True to use a full path instead of corpora folder
+        :return: a nice clean string ready to be tokenized
+        """
+        suffix = "_short" if short else ""
+        if is_full_path:
+            file_name = text_name
+        else:
+            file_name = self.root_path / "corpora" / f"{text_name}{suffix}.txt"
+        with codecs.open(file_name, encoding="UTF-8") as f:
+            raw_str = f.read()
+        # TODO add more rules
+        raw_str = bulk_replace(raw_str, [("\"", " "), ("  ", " "), ("_", "")])
+        return raw_str
+
+
 # -- Markov chains (aka ngrams)
-class MarkovChain:
-    def __init__(self, n: int, debug=False, storage_root=ngram_dir):
+class MarkovChain(AbstractTextGenerator):
+    def __init__(self, n: int, root_path: Path, debug=False):
+        super().__init__(root_path)
         self.n = n
         self.memory = {"words": defaultdict(list), "proba": defaultdict(list)}
         self.starting = []
         self.debug = debug
-        self.storage_root = storage_root
 
     def learn(self, text: str):
         """
@@ -149,25 +151,31 @@ class MarkovChain:
 
     def save_markov(self, name: str):
         """
-        Save the ngram dict and the starting words to file
-        :return: nothin'
+        Save the ngram dict and starting ngrams to file
+        :param name: name of file
+        :return: None
         """
-        with open(self.storage_root / f"{name}_{self.n}.pkl", "wb") as f:
+        with open(self.root_path / "preprocessed_ngrams" / f"{name}_{self.n}.pkl", "wb") as f:
             pickle.dump([self.starting, self.memory], f)
 
     def load_markov(self, name):
-        with open(self.storage_root / f"{name}_{self.n}.pkl", "rb") as f:
+        """
+        Load the ngram dict and starting ngrams from file
+        :param name: name of file
+        :return: None
+        """
+        with open(self.root_path / "preprocessed_ngrams" / f"{name}_{self.n}.pkl", "rb") as f:
             data = pickle.load(f)
         self.starting, self.memory = data
 
 
 # CFG / PCFG
-class ContextFreeGrammar:
-    def __init__(self, debug=False, storage_root=grammar_dir):
+class ContextFreeGrammar(AbstractTextGenerator):
+    def __init__(self, root_path: Path, debug=False):
+        super().__init__(root_path)
         self.pcfg_rules = defaultdict(lambda: defaultdict(int))
         self.start_symbols = []
         self.debug = debug
-        self.storage_root = storage_root
 
     def debug_print(self, *args, **kwargs):
         if self.debug:
@@ -260,21 +268,20 @@ class ContextFreeGrammar:
         return " ".join(sentence)
 
     def save_pcfg(self, name: str) -> None:
-        with open(self.storage_root / f"{name}.pkl", "wb") as f:
+        with open(self.root_path / "preprocessed_grammar" / f"{name}.pkl", "wb") as f:
             pickle.dump([
                 default_to_regular(self.start_symbols),
                 default_to_regular(self.pcfg_rules)
             ], f)
 
     def load_pcfg(self, name: str) -> None:
-        with open(self.storage_root / f"{name}.pkl", "rb") as f:
-            print("LOAD PCFG", self.storage_root / f"{name}.pkl")
+        with open(self.root_path / "preprocessed_grammar" / f"{name}.pkl", "rb") as f:
             self.start_symbols, self.pcfg_rules = pickle.load(f)
 
 
 if __name__ == '__main__':
     grammar = ContextFreeGrammar()
-    grammar.learn_text_sample(get_text("war_and_peace"), 1)
+    grammar.learn_text_sample(grammar.get_text("war_and_peace"), 1)
     grammar.derive()
 # add to text dependency based vs constituency based
 

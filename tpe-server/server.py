@@ -30,13 +30,13 @@ def generate_markov():
     complete_sentence = request_data.get("completeSentence")
 
     assert len(current) >= n or len(current) == 0
-    m = MarkovChain(n=n, storage_root=ngram_dir)
+    m = MarkovChain(n=n, root_path=ngram_dir)
 
     try:
         m.load_markov(text_name)
     except FileNotFoundError:
         print(f"'{text_name}' hasn't been pickled yet")
-        m.learn(get_text(f"{corpora_dir / text_name}.txt", is_full_path=True))
+        m.learn(m.get_text(text_name))
         m.save_markov(text_name)
         print("Learning done.")
 
@@ -59,13 +59,13 @@ def generate_pcfg():
     left_most = request_data.get("left_most")
 
     pcfg_file_path = f"{pcfg_dir / text_name}.pkl"
-    gra = ContextFreeGrammar(storage_root=pcfg_dir)
+    gra = ContextFreeGrammar(root_path=pcfg_dir)
     print("file path", pcfg_file_path)
     try:
         gra.load_pcfg(text_name)
     except FileNotFoundError:
         print(f"'{text_name}' hasn't been pickled yet")
-        gra.learn_text_sample(get_text(text_name, corpora_path=corpora_dir))
+        gra.learn_text_sample(gra.get_text(text_name))
         gra.save_pcfg(text_name)
 
     current = gra.derive(left_most=left_most)

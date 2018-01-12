@@ -14,13 +14,16 @@ const TEXT_NAMES = [
 
 function bulkReplace(retStr, obj) {
     for (let x in obj) {
-        retStr = retStr.replace(x, obj[x]);
+        retStr = retStr.replace(/x/g, obj[x]);
     }
     return retStr;
 }
 
 function cleanText(text) {
-    return bulkReplace(text, {" ,": ",", " .": ".", " ’ ": "'", "\( ": "\(", " \)": "\)"})
+    return bulkReplace(text, {
+        " ,": ",", " .": ".", " ’ ": "'",
+        "( ": "(", " )": ")"
+    })
 }
 
 
