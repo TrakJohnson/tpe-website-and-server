@@ -13,22 +13,11 @@ const TEXT_NAMES = [
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
 
-function bulkReplace(retStr, obj) {
-    let regex;
-    for (let x in obj) {
-        if (obj.hasOwnProperty(x)) {
-            regex = new RegExp(x, "g");
-            retStr = retStr.replace(regex, obj[x]);
-        }
-    }
-    return retStr;
-}
-
 function cleanText(text) {
-    return bulkReplace(text, {
-        " \\,": ",", " \\.": ".", " ’ ": "'",
-        "\\( ": "(", " \\)": ")"
-    })
+    return String(text)
+        .replace(/ ([,.;:)?!])/g, "$1")
+        .replace(/\) /g, ")")
+        .replace(/\s?’\s?/g, "'")
 }
 
 

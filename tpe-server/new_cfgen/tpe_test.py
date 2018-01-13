@@ -23,11 +23,3 @@ def test_cfg():
 
 def test_clean_output():
     assert clean_output("Hello . my name , is john") == "Hello. my name, is john"
-
-
-
-
-
-
-
-
