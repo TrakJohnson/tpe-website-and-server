@@ -1,5 +1,4 @@
-"""
-Remake of CFGEN
+"""Remake of CFGEN
 
 Plan:
   - generate random CFG and then match to markov (might not be feasible)
@@ -17,11 +16,10 @@ import operator
 import json
 import pprint
 # language
-import nltk # TODO nltk.download('punkt')
+import nltk  # TODO nltk.download('punkt')
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
-
 
 pp = pprint.PrettyPrinter()
 
@@ -55,7 +53,7 @@ def make_custom_terminal(non_terminal_object: nltk.grammar.Nonterminal):
         def __str__(self):
             return "boumbadaboum"
 
-    return CustomNonTerminal(non_terminal_object)
+    return CustomNonTerminal()
 
 
 class AbstractTextGenerator:
@@ -63,8 +61,8 @@ class AbstractTextGenerator:
         self.root_path = root_path
 
     def get_text(self, text_name: str, short=False, is_full_path=False):
-        """
-        Get the text from a file
+        """Get the text from a file.
+
         :param text_name: the name of the text (will be searched in corpora/) or a full path
         :param short: if text from corpora, take the short version (if it exists)
         :param is_full_path: set it to True to use a full path instead of corpora folder
@@ -135,9 +133,9 @@ class MarkovChain(AbstractTextGenerator):
     def get_first_words(self):
         return list(random.choice(self.starting))
 
-    def generate_sentence(self, state: list=None, start_ngram: list=None, counter=100) -> list:
-        """
-        Generate sentence
+    def generate_sentence(self, state: list = None, start_ngram: list = None, counter=100) -> list:
+        """Generate sentence.
+
         :param state: current progression through the sentence - list of tokens
         :param start_ngram: the ngram we start the sentence with
         :param counter: used to limit sentence length
@@ -165,8 +163,8 @@ class MarkovChain(AbstractTextGenerator):
             print(stuff)
 
     def save_markov(self, name: str):
-        """
-        Save the ngram dict and starting ngrams to file
+        """Save the ngram dict and starting ngrams to file.
+
         :param name: name of file
         :return: None
         """
@@ -174,8 +172,8 @@ class MarkovChain(AbstractTextGenerator):
             pickle.dump([self.starting, self.memory], f)
 
     def load_markov(self, name):
-        """
-        Load the ngram dict and starting ngrams from file
+        """Load the ngram dict and starting ngrams from file.
+
         :param name: name of file
         :return: None
         """
@@ -238,9 +236,9 @@ class ContextFreeGrammar(AbstractTextGenerator):
             self.pcfg_rules[left]["--TOTAL--"] += 1
 
     def derive(self, left_most=False) -> str:
-        """
-        Derive a random sentence from the rules
-        :arg left_most: if true, only take the most probable rhs instead of random with weights
+        """Derive a random sentence from the rules.
+
+        :param left_most: if true, only take the most probable rhs instead of random with weights
         :return: the sentence string
         """
         start_symbol = random.choice(self.start_symbols)
@@ -308,4 +306,3 @@ class ContextFreeGrammar(AbstractTextGenerator):
 #     grammar.learn_text_sample(grammar.get_text("war_and_peace"), 1)
 #     grammar.derive()
 # add to text dependency based vs constituency based
-
