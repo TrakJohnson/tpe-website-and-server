@@ -30,7 +30,7 @@ def generate_markov():
     complete_sentence = request_data.get("completeSentence")
 
     assert len(current) >= n or len(current) == 0
-    m = MarkovChain(n=n, root_path=ngram_dir)
+    m = MarkovChain(n=n, root_path=ngram_dir.parent)
 
     try:
         m.load_markov(text_name)
@@ -59,7 +59,7 @@ def generate_pcfg():
     left_most = request_data.get("left_most")
 
     pcfg_file_path = f"{pcfg_dir / text_name}.pkl"
-    gra = ContextFreeGrammar(root_path=pcfg_dir)
+    gra = ContextFreeGrammar(root_path=pcfg_dir.parent)
     print("file path", pcfg_file_path)
     try:
         gra.load_pcfg(text_name)

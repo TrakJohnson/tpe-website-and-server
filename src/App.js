@@ -149,7 +149,7 @@ class PCFG extends Component {
         });
         console.log(requestBody);
 
-        fetch(this.root_link + '/generate_pcfg', {
+        fetch(ROOT_LINK + '/generate_pcfg', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -160,7 +160,7 @@ class PCFG extends Component {
             resp => resp.json()
         ).then((jsonResp) => {
             this.setState({
-                currentText: jsonResp["currents_sentence"]
+                currentText: jsonResp["currentsSentence"]
             });
             console.log(jsonResp)
         }).catch((err) => console.log("FETCH FAILURE " + err))
