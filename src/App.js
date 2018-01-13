@@ -14,16 +14,20 @@ const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1
 
 
 function bulkReplace(retStr, obj) {
+    let regex;
     for (let x in obj) {
-        retStr = retStr.replace(/x/g, obj[x]);
+        if (obj.hasOwnProperty(x)) {
+            regex = new RegExp(x, "g");
+            retStr = retStr.replace(regex, obj[x]);
+        }
     }
     return retStr;
 }
 
 function cleanText(text) {
     return bulkReplace(text, {
-        " ,": ",", " .": ".", " ’ ": "'",
-        "( ": "(", " )": ")"
+        " \\,": ",", " \\.": ".", " ’ ": "'",
+        "\\( ": "(", " \\)": ")"
     })
 }
 
@@ -160,9 +164,8 @@ class PCFG extends Component {
             resp => resp.json()
         ).then((jsonResp) => {
             this.setState({
-                currentText: jsonResp["currentsSentence"]
+                currentText: jsonResp["currentSentence"]
             });
-            console.log(jsonResp)
         }).catch((err) => console.log("FETCH FAILURE " + err))
     }
 
