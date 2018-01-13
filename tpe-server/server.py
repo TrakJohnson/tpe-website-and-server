@@ -11,9 +11,7 @@ CORS(app)
 app_dir = Path(app.root_path)
 app.template_folder = app_dir.parent / "build"
 app.static_folder = app_dir.parent / "build" / "static"
-corpora_dir = app_dir.parent / "tpe-server" / "new_cfgen" / "corpora"
-ngram_dir = corpora_dir.parent / "preprocessed_ngrams"
-pcfg_dir = corpora_dir.parent / "preprocessed_grammars"
+root_dir = app_dir.parent / "tpe-server" / "new_cfgen"
 
 
 @app.route("/")
@@ -28,9 +26,9 @@ def generate_markov():
     current = request_data.get("current")
     n = request_data.get("n")
     complete_sentence = request_data.get("completeSentence")
-
+    print(text_name)
     assert len(current) >= n or len(current) == 0
-    m = MarkovChain(n=n, root_path=ngram_dir.parent)
+    m = MarkovChain(n=n, root_path=root_dir)
 
     try:
         m.load_markov(text_name)
@@ -55,17 +53,15 @@ def generate_markov():
 @app.route("/generate_pcfg", methods=["POST"])
 def generate_pcfg():
     request_data = json.loads(request.data)
-    text_name = request_data.get("text_name")
-    left_most = request_data.get("left_most")
+    text_name = request_data.get("textName")
+    left_most = request_data.get("leftMost")
 
-    pcfg_file_path = f"{pcfg_dir / text_name}.pkl"
-    gra = ContextFreeGrammar(root_path=pcfg_dir.parent)
-    print("file path", pcfg_file_path)
+    gra = ContextFreeGrammar(root_path=root_dir, debug=True)
     try:
         gra.load_pcfg(text_name)
     except FileNotFoundError:
         print(f"'{text_name}' hasn't been pickled yet")
-        gra.learn_text_sample(gra.get_text(text_name))
+        gra.learn_text_sample(gra.get_text(text_name))  # TODO subprocess
         gra.save_pcfg(text_name)
 
     current = gra.derive(left_most=left_most)

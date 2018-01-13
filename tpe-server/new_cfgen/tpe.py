@@ -43,6 +43,21 @@ def default_to_regular(d):
     return d
 
 
+def make_custom_terminal(non_terminal_object: nltk.grammar.Nonterminal):
+    class CustomNonTerminal(non_terminal_object):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def __hash__(self):
+            print("we're hashing lalalala")
+            return hash(self.symbol())
+
+        def __str__(self):
+            return "boumbadaboum"
+
+    return CustomNonTerminal(non_terminal_object)
+
+
 class AbstractTextGenerator:
     def __init__(self, root_path: Path):
         self.root_path = root_path
@@ -214,8 +229,11 @@ class ContextFreeGrammar(AbstractTextGenerator):
 
         for production in productions:
             left, right = production.lhs(), production.rhs()
+            left = make_custom_terminal(left)
             if len(right) == 1 and type(right[0]) is str:
                 right = right[0]
+            else:
+                right = tuple(make_custom_terminal(i) for i in right)
             self.pcfg_rules[left][right] += 1
             self.pcfg_rules[left]["--TOTAL--"] += 1
 
@@ -243,7 +261,11 @@ class ContextFreeGrammar(AbstractTextGenerator):
                     del sentence[ind]
                     outputs, probas = [], []
                     self.debug_print("TAG:", tag)
+                    self.debug_print("TAGTYPE:", type(tag))
+                    self.debug_print([i for i in self.pcfg_rules.keys() if i == tag])
+                    self.debug_print([i for i in self.pcfg_rules.keys() if hash(i) == hash(tag)])
                     self.debug_print("AVAILABLE:", self.pcfg_rules[tag])
+                    print(self.pcfg_rules)
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)
@@ -268,20 +290,22 @@ class ContextFreeGrammar(AbstractTextGenerator):
         return " ".join(sentence)
 
     def save_pcfg(self, name: str) -> None:
-        with open(self.root_path / "preprocessed_grammar" / f"{name}.pkl", "wb") as f:
+        file_path = self.root_path / "preprocessed_grammars" / f"{name}.pkl"
+        with open(file_path, "wb") as f:
             pickle.dump([
                 default_to_regular(self.start_symbols),
                 default_to_regular(self.pcfg_rules)
             ], f)
 
     def load_pcfg(self, name: str) -> None:
-        with open(self.root_path / "preprocessed_grammar" / f"{name}.pkl", "rb") as f:
+        file_path = self.root_path / "preprocessed_grammars" / f"{name}.pkl"
+        with open(file_path, "rb") as f:
             self.start_symbols, self.pcfg_rules = pickle.load(f)
 
-
-if __name__ == '__main__':
-    grammar = ContextFreeGrammar()
-    grammar.learn_text_sample(grammar.get_text("war_and_peace"), 1)
-    grammar.derive()
+#
+# if __name__ == '__main__':
+#     grammar = ContextFreeGrammar()
+#     grammar.learn_text_sample(grammar.get_text("war_and_peace"), 1)
+#     grammar.derive()
 # add to text dependency based vs constituency based
 
