@@ -14,11 +14,14 @@ const TEXT_NAMES = [
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
 
-function cleanText(text) {
+export function cleanText(text) {
     return String(text)
-        .replace(/ ([,.;:)?!])/g, "$1")
-        .replace(/\) /g, ")")
-        .replace(/\s?’\s?/g, "'")
+        .replace(/’/g, "'")
+        .replace(/ ([,.:;)?!])\s?/g, "$1 ")  // strip spaces before these characters
+        .replace(/\s?([(]) /g, " $1")  // strip spaces after these characters
+        /*.replace(/\s?(['])\s?/g, "$1")  // strip spaces before and after these characters*/
+        .replace(/^\s/, "")
+        .replace(/\s$/, "")
 }
 
 
