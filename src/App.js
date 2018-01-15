@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
+import fetch from 'whatwg-fetch';
 
 // TODO make text names more consistent and displayable
 const TEXT_NAMES = [
