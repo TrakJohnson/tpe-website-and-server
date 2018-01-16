@@ -1,7 +1,6 @@
-import React from 'react';
-import {cleanText} from "./App";
-
+const {cleanText} = require('./App.js');
 const assert = require('assert');
+
 
 describe("cleanText", () => {
     it("should remove spaces at the start of text", () => {
@@ -78,6 +77,7 @@ describe("cleanText", () => {
             "';' is not the same as ';'"
         )
     });
+    // TODO Make this work, or declare it as a feature
     /*it("should remove the whitespaces directly before and after single quotation marks", () => {
         assert.equal(
             cleanText(["Margarine", "is", "the", "'", "Meyer", "'"].join(" ")),
