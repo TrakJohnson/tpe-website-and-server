@@ -1,2 +1,5 @@
+flask
+flask-cors
+gunicorn
 nltk
 git+https://github.com/emilmont/pyStatParser.git
