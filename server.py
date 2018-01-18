@@ -9,9 +9,9 @@ CORS(app)
 
 # setup directories
 app_dir = Path(app.root_path)
-app.template_folder = app_dir.parent / "build"
-app.static_folder = app_dir.parent / "build" / "static"
-root_dir = app_dir.parent / "tpe-server" / "new_cfgen"
+app.template_folder = app_dir / "build"
+app.static_folder = app_dir / "build" / "static"
+root_dir = app_dir
 
 
 @app.route("/")
