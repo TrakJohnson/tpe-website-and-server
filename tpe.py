@@ -1,8 +1,5 @@
-"""Remake of CFGEN
-
-Plan:
-  - generate random CFG and then match to markov (might not be feasible)
-  - website
+"""
+A sentence generator based on Markov Chains and Context Free Grammar
 """
 
 # system
@@ -14,14 +11,19 @@ import pickle
 from pathlib import Path
 import operator
 import json
-import pprint
+from pprint import pprint
 # language
-import nltk  # TODO nltk.download('punkt')
+import nltk
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
 
-pp = pprint.PrettyPrinter()
+
+# Check for required ressources
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
 
 def bulk_replace(s: str, replace_rules: List[Tuple[str, str]]) -> str:
@@ -247,7 +249,7 @@ class ContextFreeGrammar(AbstractTextGenerator):
             sentence = [nltk.grammar.Nonterminal(i) for i in str(start_symbol).split("+")]
         else:
             sentence = [start_symbol]
-        pp.pprint(self.pcfg_rules)
+        pprint(self.pcfg_rules)
         self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
         while continue_derivation:
