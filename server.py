@@ -1,5 +1,5 @@
 from pathlib import Path
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from tpe import *
 import json
@@ -17,6 +17,11 @@ root_dir = app_dir
 @app.route("/")
 def homepage():
     return render_template("index.html")
+
+
+@app.route("/favicon.ico")
+def get_favicon():
+    return send_from_directory(app.template_folder, "favicon.ico")
 
 
 @app.route("/generate_markov", methods=["POST"])
