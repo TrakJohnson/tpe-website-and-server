@@ -11,7 +11,7 @@ CORS(app)
 app_dir = Path(app.root_path)
 app.template_folder = app_dir / "build"
 app.static_folder = app_dir / "build" / "static"
-root_dir = app_dir
+root_dir = app_dir / "data"
 
 
 @app.route("/")
