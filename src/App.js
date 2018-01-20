@@ -6,7 +6,7 @@ import './App.css';
 const TEXT_NAMES = [
     "darwin",
     "frankenstein",
-    "oldmanandthesea",
+    "old_man_and_the_sea",
     "trump_speeches",
     "ulysses_ed11",
     "war_and_peace",

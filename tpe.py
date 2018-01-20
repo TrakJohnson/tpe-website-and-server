@@ -19,7 +19,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
 
 
-# Check for required ressources
+# Check for required resources
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -43,19 +43,21 @@ def default_to_regular(d):
     return d
 
 
-def make_custom_terminal(non_terminal_object: nltk.grammar.Nonterminal):
-    class CustomNonTerminal(non_terminal_object):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+class CustomNonTerminal:
+    def __init__(self, anything: str):
+        self.s = str(anything)
 
-        def __hash__(self):
-            print("we're hashing lalalala")
-            return hash(self.symbol())
+    def __str__(self):
+        return self.s
 
-        def __str__(self):
-            return "boumbadaboum"
+    def __repr__(self):
+        return self.s
 
-    return CustomNonTerminal()
+    def __hash__(self):
+        return hash(self.s)
+
+    def __eq__(self, other):
+        return self.s == other.s
 
 
 class AbstractTextGenerator:
@@ -203,37 +205,39 @@ class ContextFreeGrammar(AbstractTextGenerator):
 
     def learn_text_sample(self, text: str, samples=100) -> None:
         for ind, sentence in enumerate(random.sample(set(sent_tokenize(text)), samples)):
-            print(ind, len(sentence))
+            print(ind, len(sentence), samples)
             self.learn_sentence(sentence)
         self.make_cfg_probabilities()
 
     def make_cfg_probabilities(self):
         for lhs, value in self.pcfg_rules.items():
+            assert type(lhs) is CustomNonTerminal
             total = value["--TOTAL--"]
             for rhs, num in value.items():
-                self.pcfg_rules[lhs][rhs] = round(self.pcfg_rules[lhs][rhs] / total, 3)
+                self.pcfg_rules[lhs][rhs] = round(self.pcfg_rules[lhs][rhs] / total, 4)
             del value["--TOTAL--"]
 
     def learn_sentence(self, sentence: str) -> None:
         p = stat_parser.Parser()
-
+        assert all(type(i) is CustomNonTerminal for i in iter(self.pcfg_rules.keys()))
         has_failed = True
         while has_failed:
             try:
                 productions = p.parse(sentence).productions()
                 has_failed = False  # no error
             except TypeError:
-                pass  # resart the loop
+                pass  # restart the loop
 
-        self.start_symbols.append(productions[0].lhs())
+        self.start_symbols.append(CustomNonTerminal(productions[0].lhs()))
+
+        assert all(type(i) is CustomNonTerminal for i in self.start_symbols)
 
         for production in productions:
-            left, right = production.lhs(), production.rhs()
-            left = make_custom_terminal(left)
+            left, right = CustomNonTerminal(production.lhs()), production.rhs()
             if len(right) == 1 and type(right[0]) is str:
                 right = right[0]
             else:
-                right = tuple(make_custom_terminal(i) for i in right)
+                right = tuple(CustomNonTerminal(i) for i in right)
             self.pcfg_rules[left][right] += 1
             self.pcfg_rules[left]["--TOTAL--"] += 1
 
@@ -244,11 +248,11 @@ class ContextFreeGrammar(AbstractTextGenerator):
         :return: the sentence string
         """
         start_symbol = random.choice(self.start_symbols)
-        if "+" in str(start_symbol):
+        if "+" in str(start_symbol) and CustomNonTerminal(start_symbol) not in self.pcfg_rules.keys():
             # TODO really make this work correctly
-            sentence = [nltk.grammar.Nonterminal(i) for i in str(start_symbol).split("+")]
+            sentence = [CustomNonTerminal(i) for i in str(start_symbol).split("+")]
         else:
-            sentence = [start_symbol]
+            sentence = [CustomNonTerminal(start_symbol)]
         pprint(self.pcfg_rules)
         self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
@@ -257,15 +261,16 @@ class ContextFreeGrammar(AbstractTextGenerator):
             total = len(sentence)
             while ind < total:
                 tag = sentence[ind]
-                if nltk.grammar.is_nonterminal(tag):
+                if type(tag) is CustomNonTerminal:
                     del sentence[ind]
                     outputs, probas = [], []
                     self.debug_print("TAG:", tag)
                     self.debug_print("TAGTYPE:", type(tag))
                     self.debug_print([i for i in self.pcfg_rules.keys() if i == tag])
                     self.debug_print([i for i in self.pcfg_rules.keys() if hash(i) == hash(tag)])
+                    self.debug_print("TOPLEVELKEYS:", [type(i) for i in self.pcfg_rules.keys()])
                     self.debug_print("AVAILABLE:", self.pcfg_rules[tag])
-                    print(self.pcfg_rules)
+                    # print(self.pcfg_rules)
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)

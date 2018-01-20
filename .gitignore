@@ -20,7 +20,6 @@ yarn-error.log*
 
 # idea
 .idea/
-tpe-server/.idea
 
 .cache/
 __pycache__/
