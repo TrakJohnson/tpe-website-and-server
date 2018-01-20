@@ -3,20 +3,23 @@ A sentence generator based on Markov Chains and Context Free Grammar
 """
 
 # system
-from typing import List, Tuple, Dict
-from collections import defaultdict
-import random
 import codecs
 import pickle
 from pathlib import Path
-import operator
-import json
 from pprint import pprint
+# types
+import json
+import operator
+from typing import List, Tuple, Dict
+from collections import defaultdict
 # language
 import nltk
 from nltk import ngrams, PCFG
 from nltk.tokenize import sent_tokenize, word_tokenize
 import stat_parser
+# other
+import random
+import math
 
 
 # Check for required resources
@@ -132,7 +135,13 @@ class MarkovChain(AbstractTextGenerator):
             f"next possible for {current_ngram}: \n "
             f"{[i + ' ' + str(j) for i, j in zip(next_possible, weights)]}\n"
         )
-        return {"next": random.choices(next_possible, weights=weights), "pos": len(next_possible)}
+        return {
+            "next": random.choices(next_possible, weights=weights),
+            "pos": len(next_possible),
+            "possibleNextWords": list(zip(
+                next_possible, ["{0:.2f}".format(100*i/sum(weights)) for i in weights]
+            ))
+        }
 
     def get_first_words(self):
         return list(random.choice(self.starting))
@@ -194,9 +203,12 @@ class ContextFreeGrammar(AbstractTextGenerator):
         self.start_symbols = []
         self.debug = debug
 
-    def debug_print(self, *args, **kwargs):
+    def debug_print(self, *args, pp=False):
         if self.debug:
-            print(*args, **kwargs)
+            if pp:
+                pprint(args[0])
+            else:
+                print(*args)
 
     def learn_text_full(self, text: str) -> None:
         for sentence in sent_tokenize(text):
@@ -249,11 +261,10 @@ class ContextFreeGrammar(AbstractTextGenerator):
         """
         start_symbol = random.choice(self.start_symbols)
         if "+" in str(start_symbol) and CustomNonTerminal(start_symbol) not in self.pcfg_rules.keys():
-            # TODO really make this work correctly
             sentence = [CustomNonTerminal(i) for i in str(start_symbol).split("+")]
         else:
             sentence = [CustomNonTerminal(start_symbol)]
-        pprint(self.pcfg_rules)
+        self.debug_print(self.pcfg_rules, pp=True)
         self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
         while continue_derivation:
@@ -264,13 +275,8 @@ class ContextFreeGrammar(AbstractTextGenerator):
                 if type(tag) is CustomNonTerminal:
                     del sentence[ind]
                     outputs, probas = [], []
-                    self.debug_print("TAG:", tag)
-                    self.debug_print("TAGTYPE:", type(tag))
-                    self.debug_print([i for i in self.pcfg_rules.keys() if i == tag])
-                    self.debug_print([i for i in self.pcfg_rules.keys() if hash(i) == hash(tag)])
-                    self.debug_print("TOPLEVELKEYS:", [type(i) for i in self.pcfg_rules.keys()])
+                    self.debug_print("CURRENT TAG:", tag)
                     self.debug_print("AVAILABLE:", self.pcfg_rules[tag])
-                    # print(self.pcfg_rules)
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)

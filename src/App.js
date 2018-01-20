@@ -45,14 +45,6 @@ class App extends Component {
                     <br/><br/>
                     <PCFG/>
                     <hr/>
-                    <div>
-                        1 - Introduction <br/>
-                        2 - Chaînes de markov <br/>
-                        3 - Grammaire sans contexte <br/>
-                        4 - Explication de l'algorithme <br/>
-                        5 - Exemples de textes générés <br/>
-                        6 - Applications et intérêt
-                    </div>
                 </div>
             </div>
         );
@@ -67,6 +59,8 @@ class Markov extends Component {
             currentText: [],
             textName: "darwin",
             n: 2,
+            possibleNextWords: [],
+            currentTotal: null
         };
 
         this.getText = this.getText.bind(this);
@@ -94,7 +88,8 @@ class Markov extends Component {
             resp => resp.json()
         ).then((jsonResp) => {
             this.setState({
-                currentText: jsonResp["currentSentence"]
+                currentText: jsonResp["currentSentence"],
+                possibleNextWords: jsonResp["possibleNextWords"]
             });
             console.log(jsonResp)
         }).catch(err => console.log("FETCH FAILURE " + err))
@@ -105,6 +100,13 @@ class Markov extends Component {
     }
 
     render() {
+        let possibleNextWords = this.state.possibleNextWords ? this.state.possibleNextWords.slice(0, 4).map(
+            ([word, proba]) => <tr key={word + proba}>
+                    <td>{word}</td>
+                    <td>{proba}%</td>
+            </tr>
+        ) : <tr><td>Nothing here</td></tr>;
+
         return <div id="markov-wrapper">
             <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
             <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
@@ -116,14 +118,20 @@ class Markov extends Component {
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
                 {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
             </select>
-            <input type="range"
-                   name="n-gram size"
-                   min={1}
-                   max={4}
-                   value={this.state.n}
-                   onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
-            />
-            {this.state.n}
+            Markov Chain Order:
+            <div style={{display: "inline-block"}}>
+                {this.state.n}
+                <input type="range"
+                       name="n-gram size"
+                       min={1} max={4}
+                       value={this.state.n}
+                       onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
+                />
+            </div>
+            <br/><br/>
+            <table><tbody>
+                {possibleNextWords}
+            </tbody></table>
         </div>;
     }
 }

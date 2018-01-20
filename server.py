@@ -43,15 +43,19 @@ def generate_markov():
         m.save_markov(text_name)
         print("Learning done.")
 
+    other_next_words = None
     if complete_sentence:
         current = m.generate_sentence(current)
     elif not current:
         current = m.get_first_words()
     else:
-        current.extend(m.next_word(current)["next"])
+        data = m.next_word(current)
+        other_next_words = data.get("possibleNextWords")
+        current.extend(data["next"])
 
     return jsonify({
-        "currentSentence": current
+        "currentSentence": current,
+        "possibleNextWords": other_next_words
     })
 
 
