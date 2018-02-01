@@ -3,6 +3,7 @@ body {
     padding: 0;
     font-family: sans-serif;
     background-color: whitesmoke;
+    font-size: 12px;
 }
 
 #menu-bar {
@@ -12,12 +13,24 @@ body {
 }
 
 #page-title {
-    font-size: 28px;
+    font-size: 32px;
     display: inline;
 }
 
 #menu {
     display: inline;
+}
+
+#menu > a {
+    float: right;
+    font-size: 20px;
+    margin: 0 30px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    background: #3cb0fd;
 }
 
 #content {
@@ -34,7 +47,18 @@ body {
 }
 
 button {
+    border-radius: 2px;
+    border-width: 0pc;
+    color: #ffffff;
+    background: #3498db;
+    padding: 5px;
+    margin: 3px;
+    text-decoration: none;
+}
 
+button:hover {
+  background: #3cb0fd;
+  text-decoration: none;
 }
 
 #generate-action {
