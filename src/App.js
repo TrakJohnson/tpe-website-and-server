@@ -104,10 +104,16 @@ class Markov extends Component {
     render() {
         let possibleNextWords = this.state.possibleNextWords ? this.state.possibleNextWords.slice(0, 4).map(
             ([word, proba]) => <tr key={word + proba}>
-                    <td><span>{word }</span></td>
+                    <td>
+                        <span style={{
+                            background: word === this.state.currentText.slice(-1)[0] ? "lightgreen" : "",
+                            padding: "3px"
+                        }}>{word}
+                        </span>
+                    </td>
                     <td>{proba}%</td>
             </tr>
-        ) : <tr><td>Nothing here</td></tr>;
+        ) : <tr><td>-</td><td>-</td></tr>;
 
         return <div id="markov-wrapper">
             {/* top bar */}
@@ -123,7 +129,8 @@ class Markov extends Component {
                 <div id="markov-table-wrapper">
                     <table><tbody>
                         <tr style={{textAlign: "center", backgroundColor: "lightgrey"}}>
-                            <td colspan="2">Choix des mots</td>
+                            <td>Mot</td>
+                            <td>Probabilité</td>
                         </tr>
                         {possibleNextWords}
                     </tbody></table>
@@ -193,7 +200,7 @@ class PCFG extends Component {
             <button onClick={this.clear}>Clear</button>
             <br/>
             <div id="cfg-central">
-                <textarea readOnly={true} id="generated-text" value={cleanText(this.state.currentText)}/>
+                <textarea readOnly={true} value={cleanText(this.state.currentText)}/>
             </div>
             <br/>
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>

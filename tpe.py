@@ -125,9 +125,12 @@ class MarkovChain(AbstractTextGenerator):
         :param current_state: the last two words
         :return: the next word
         """
+        print("HELLO?")
         current_ngram = tuple(current_state[-self.n:])
         next_possible = self.memory["words"].get(current_ngram)
+        print(current_ngram)
         if not next_possible:
+            print("ABORT")
             return {"next": "", "pos": 0}
 
         weights = self.memory["proba"][current_ngram]
@@ -140,16 +143,14 @@ class MarkovChain(AbstractTextGenerator):
         next_possible_word_and_weight = sorted(list(zip(
             next_possible, ["{0:.2f}".format(100*i/sum(weights)) for i in weights]
         )), key=lambda x: float(x[1]))[::-1]
-        print(next_possible_word_and_weight)
 
         if random_choice:
             next_word = random.choices(next_possible, weights=weights)
         else:
-            next_word = next_possible_word_and_weight[0]
-            print(next_word)
+            next_word = [next_possible_word_and_weight[0][0]]
 
         return {
-            "next": random.choices(next_possible, weights=weights),
+            "next": next_word,
             "pos": len(next_possible),
             "possibleNextWords": next_possible_word_and_weight
         }

@@ -31,7 +31,7 @@ def generate_markov():
     current = request_data.get("current")
     n = request_data.get("n")
     complete_sentence = request_data.get("completeSentence")
-    random_choice = request_data.get("randomChoice")
+    random_choice = bool(request_data.get("randomChoice"))
     print(text_name)
     assert len(current) >= n or len(current) == 0
     m = MarkovChain(n=n, root_path=root_dir)
@@ -50,7 +50,8 @@ def generate_markov():
     elif not current:
         current = m.get_first_words()
     else:
-        data = m.next_word(current)
+        print("RANDOM CHOICE", random_choice)
+        data = m.next_word(current, random_choice=random_choice)
         other_next_words = data.get("possibleNextWords")
         current.extend(data["next"])
 

@@ -10,6 +10,8 @@ body {
     font-size: 12px;
 }
 
+/* TOP BAR */
+
 #menu-bar {
     margin: 0 5%;
     border: 1px solid lightblue;
@@ -45,7 +47,7 @@ body {
     text-align: center;
 }
 
-#generated-text {
+textarea {
     width: 70%;
     height: 100px;
     margin: 5px;
@@ -91,6 +93,10 @@ button:hover {
     width: 30%;
     border: 1px solid black;
     margin: 5px 0;
+}
+
+#markov-table-wrapper > table {
+    width: 100%;
 }
 
 #markov-central > textarea {
