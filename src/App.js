@@ -61,7 +61,8 @@ class Markov extends Component {
             textName: "darwin",
             n: 2,
             possibleNextWords: [],
-            currentTotal: null
+            currentTotal: null,
+            randomChoice: false
         };
 
         this.getText = this.getText.bind(this);
@@ -75,7 +76,7 @@ class Markov extends Component {
             current: this.state.currentText,
             n: this.state.n,
             completeSentence: completeSentence,
-            randomChoice: false
+            randomChoice: this.state.randomChoice
         });
         console.log(requestBody);
 
@@ -99,6 +100,10 @@ class Markov extends Component {
 
     clear() {
         this.setState({currentText: []})
+    }
+
+    randomChoiceChange(e) {
+        this.setState({randomChoice: e.target.checked})
     }
 
     render() {
@@ -138,20 +143,29 @@ class Markov extends Component {
             </div>
             <br/>
             {/* settings */}
-            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
-                {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
-            </select>
-            Markov Chain Order:
-            <div style={{display: "inline-block"}}>
-                {this.state.n}
-                <input type="range"
-                       name="n-gram size"
-                       min={1} max={4}
-                       value={this.state.n}
-                       onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
-                />
+            <div id="markov-settings">
+                <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
+                    {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
+                </select>
+                <div>
+                    Markov Chain Order:
+                    <div style={{display: "inline-block"}}>
+                        {this.state.n}
+                        <input type="range"
+                               name="n-gram size"
+                               min={1} max={4}
+                               value={this.state.n}
+                               onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
+                        />
+                    </div>
+                </div>
+                <div id="random-choice">
+                    <label> Choix aléatoire pondéré:
+                        <input type="checkbox" onChange={this.randomChoiceChange.bind(this)}/>
+                    </label>
+                </div>
             </div>
-            <input type="checkbox"/>
+
         </div>;
     }
 }

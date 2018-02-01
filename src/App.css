@@ -99,10 +99,10 @@ button:hover {
     width: 100%;
 }
 
-#markov-central > textarea {
-
+#makov-settings {
+    display: inline;
 }
 
-#generate-action {
-
+#markov-settings > * {
+    display: inline-block;
 }
