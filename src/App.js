@@ -74,7 +74,8 @@ class Markov extends Component {
             textName: this.state.textName,
             current: this.state.currentText,
             n: this.state.n,
-            completeSentence: completeSentence
+            completeSentence: completeSentence,
+            randomChoice: false
         });
         console.log(requestBody);
 
@@ -103,7 +104,7 @@ class Markov extends Component {
     render() {
         let possibleNextWords = this.state.possibleNextWords ? this.state.possibleNextWords.slice(0, 4).map(
             ([word, proba]) => <tr key={word + proba}>
-                    <td>{word}</td>
+                    <td><span>{word }</span></td>
                     <td>{proba}%</td>
             </tr>
         ) : <tr><td>Nothing here</td></tr>;
@@ -115,8 +116,19 @@ class Markov extends Component {
             <button onClick={this.clear}>Clear</button>
             <br/>
             {/* text area */}
-            <textarea readOnly={true} id="generated-text"
+            <div id="markov-central">
+                <textarea readOnly={true} id="generated-text"
                       value={cleanText(this.state.currentText.join(" "))}/>
+                {/* possible words */}
+                <div id="markov-table-wrapper">
+                    <table><tbody>
+                        <tr style={{textAlign: "center", backgroundColor: "lightgrey"}}>
+                            <td colspan="2">Choix des mots</td>
+                        </tr>
+                        {possibleNextWords}
+                    </tbody></table>
+                </div>
+            </div>
             <br/>
             {/* settings */}
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
@@ -132,11 +144,7 @@ class Markov extends Component {
                        onChange={(e) => this.setState({n: Number(e.target.value)}, this.clear)}
                 />
             </div>
-            {/* possible words */}
-            <br/><br/>
-            <table><tbody>
-                {possibleNextWords}
-            </tbody></table>
+            <input type="checkbox"/>
         </div>;
     }
 }
@@ -184,7 +192,9 @@ class PCFG extends Component {
             <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
-            <textarea readOnly={true} id="generated-text" value={cleanText(this.state.currentText)}/>
+            <div id="cfg-central">
+                <textarea readOnly={true} id="generated-text" value={cleanText(this.state.currentText)}/>
+            </div>
             <br/>
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
                 {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}

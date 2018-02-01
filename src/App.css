@@ -1,3 +1,7 @@
+* {
+    font-size: 12px;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -13,8 +17,9 @@ body {
 }
 
 #page-title {
-    font-size: 32px;
+    font-size: 40px;
     display: inline;
+    font-weight: lighter;
 }
 
 #menu {
@@ -41,7 +46,8 @@ body {
 }
 
 #generated-text {
-    width: 80%;
+    width: 70%;
+    height: 100px;
     margin: 5px;
     border: 3px solid lightgray;
 }
@@ -59,6 +65,36 @@ button {
 button:hover {
   background: #3cb0fd;
   text-decoration: none;
+}
+
+#cfg-central {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#cfg-central > textarea {
+    width: 100%;
+}
+
+#markov-central {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#markov-central > textarea {
+    width: 65%;
+}
+
+#markov-table-wrapper {
+    float: right;
+    height: 110px;
+    width: 30%;
+    border: 1px solid black;
+    margin: 5px 0;
+}
+
+#markov-central > textarea {
+
 }
 
 #generate-action {

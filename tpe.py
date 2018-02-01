@@ -119,8 +119,9 @@ class MarkovChain(AbstractTextGenerator):
                         self.memory["words"][n_tuple].index(next_word)
                     ] += 1
 
-    def next_word(self, current_state: List[str]) -> dict:
+    def next_word(self, current_state: List[str], random_choice=True) -> dict:
         """
+        :param random_choice: if false, take max. if true, take weighted random
         :param current_state: the last two words
         :return: the next word
         """
@@ -135,20 +136,31 @@ class MarkovChain(AbstractTextGenerator):
             f"next possible for {current_ngram}: \n "
             f"{[i + ' ' + str(j) for i, j in zip(next_possible, weights)]}\n"
         )
+
+        next_possible_word_and_weight = sorted(list(zip(
+            next_possible, ["{0:.2f}".format(100*i/sum(weights)) for i in weights]
+        )), key=lambda x: float(x[1]))[::-1]
+        print(next_possible_word_and_weight)
+
+        if random_choice:
+            next_word = random.choices(next_possible, weights=weights)
+        else:
+            next_word = next_possible_word_and_weight[0]
+            print(next_word)
+
         return {
             "next": random.choices(next_possible, weights=weights),
             "pos": len(next_possible),
-            "possibleNextWords": list(zip(
-                next_possible, ["{0:.2f}".format(100*i/sum(weights)) for i in weights]
-            ))
+            "possibleNextWords": next_possible_word_and_weight
         }
 
     def get_first_words(self):
         return list(random.choice(self.starting))
 
-    def generate_sentence(self, state: list = None, start_ngram: list = None, counter=100) -> list:
-        """Generate sentence.
-
+    def generate_sentence(self, state: list = None, start_ngram: list = None, counter=100, random_choice=True) -> list:
+        """
+        Generate sentence.
+        :param random_choice: passed on to the self.next_word method
         :param state: current progression through the sentence - list of tokens
         :param start_ngram: the ngram we start the sentence with
         :param counter: used to limit sentence length
@@ -159,7 +171,7 @@ class MarkovChain(AbstractTextGenerator):
                 state = self.get_first_words()
             else:
                 state = start_ngram
-        next_word = self.next_word(state)["next"]
+        next_word = self.next_word(state, random_choice=random_choice)["next"]
         if next_word == "":
             return state
         state.extend(next_word)
@@ -176,8 +188,8 @@ class MarkovChain(AbstractTextGenerator):
             print(stuff)
 
     def save_markov(self, name: str):
-        """Save the ngram dict and starting ngrams to file.
-
+        """
+        Save the ngram dict and starting ngrams to file.
         :param name: name of file
         :return: None
         """
