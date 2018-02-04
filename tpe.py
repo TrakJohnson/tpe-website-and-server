@@ -20,6 +20,7 @@ import stat_parser
 # other
 import random
 import math
+import uuid
 
 
 # Check for required resources
@@ -40,7 +41,7 @@ def clean_output(output: str) -> str:
     return bulk_replace(output, [(" ,", ","), (" .", "."), (" ’ ", "'"), ("( ", "("), (" )", ")")])
 
 
-def default_to_regular(d):
+def default_to_regular(d: defaultdict) -> dict:
     if isinstance(d, defaultdict):
         d = {k: default_to_regular(v) for k, v in d.items()}
     return d
@@ -49,6 +50,7 @@ def default_to_regular(d):
 class CustomNonTerminal:
     def __init__(self, anything: str):
         self.s = str(anything)
+        self.unique_id = uuid.uuid4()
 
     def __str__(self):
         return self.s
@@ -61,6 +63,25 @@ class CustomNonTerminal:
 
     def __eq__(self, other):
         return self.s == other.s
+
+
+class Graph:
+    graph: dict
+
+    def __init__(self):
+        self.graph = {"nodes": [], "links": []}
+
+    def __str__(self):
+        return str(self.graph)
+
+    def add_node(self, node: str):
+        self.graph["nodes"].append(node)
+
+    def add_unique_node(self, node: str, unique_id: str):
+        self.add_node(node + "--" + str(unique_id))
+
+    def add_link(self, source: str, target: str):
+        self.graph["links"].append({"source": source, "target": target})
 
 
 class AbstractTextGenerator:
@@ -125,7 +146,6 @@ class MarkovChain(AbstractTextGenerator):
         :param current_state: the last two words
         :return: the next word
         """
-        print("HELLO?")
         current_ngram = tuple(current_state[-self.n:])
         next_possible = self.memory["words"].get(current_ngram)
         print(current_ngram)
@@ -266,25 +286,35 @@ class ContextFreeGrammar(AbstractTextGenerator):
             self.pcfg_rules[left][right] += 1
             self.pcfg_rules[left]["--TOTAL--"] += 1
 
-    def derive(self, left_most=False) -> str:
+    def derive(self, left_most=False) -> dict:
         """Derive a random sentence from the rules.
 
         :param left_most: if true, only take the most probable rhs instead of random with weights
         :return: the sentence string
         """
         start_symbol = random.choice(self.start_symbols)
+        print(str(start_symbol))
         if "+" in str(start_symbol) and CustomNonTerminal(start_symbol) not in self.pcfg_rules.keys():
             sentence = [CustomNonTerminal(i) for i in str(start_symbol).split("+")]
         else:
             sentence = [CustomNonTerminal(start_symbol)]
+        print(sentence)
         self.debug_print(self.pcfg_rules, pp=True)
         self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
+        current_csv = ["parent,child"]
+        current_tree = [{
+            "name": 'Top Level',
+            "attributes": {"simple": ''},
+            "children": [],
+        }]
+        current_tree_location = []
         while continue_derivation:
             ind = 0
             total = len(sentence)
             while ind < total:
                 tag = sentence[ind]
+                print("CURRENT TAG", tag)
                 if type(tag) is CustomNonTerminal:
                     del sentence[ind]
                     outputs, probas = [], []
@@ -293,6 +323,12 @@ class ContextFreeGrammar(AbstractTextGenerator):
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)
+                        # tree
+                        print(k)
+                        target = str(str(k[0]) + "---" + str(k[0].unique_id)) if type(k[0]) is CustomNonTerminal else str(k)
+                        current_csv.append(",".join(
+                            [str(tag) + "---" + str(tag.unique_id), target]
+                        ))
                     assert len(probas) == len(outputs) != 0
 
                     if left_most:
@@ -309,9 +345,10 @@ class ContextFreeGrammar(AbstractTextGenerator):
             # check if derivation needs to be continued
             continue_derivation = not all(isinstance(x, str) for x in sentence)
             self.debug_print("SENTENCE : ", sentence)
+            print(current_csv)
 
         # replace by a randomly weighted choice
-        return " ".join(sentence)
+        return {"sentence": " ".join(sentence), "csv": "\n".join(current_csv)}
 
     def save_pcfg(self, name: str) -> None:
         file_path = self.root_path / "preprocessed_grammars" / f"{name}.pkl"

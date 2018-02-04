@@ -67,7 +67,7 @@ def generate_pcfg():
     text_name = request_data.get("textName")
     left_most = request_data.get("leftMost")
 
-    gra = ContextFreeGrammar(root_path=root_dir, debug=True)
+    gra = ContextFreeGrammar(root_path=root_dir, debug=False)
     try:
         gra.load_pcfg(text_name)
     except FileNotFoundError:
@@ -78,7 +78,8 @@ def generate_pcfg():
     current = gra.derive(left_most=left_most)
 
     return jsonify({
-        "currentSentence": current
+        "currentSentence": current["sentence"],
+        "csv": current["csv"]
     })
 
 

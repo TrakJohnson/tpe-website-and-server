@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Tree, treeUtil } from 'react-d3-tree';
 import './App.css';
 
 
@@ -13,6 +14,7 @@ const TEXT_NAMES = [
 ];
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
+const csv_source = "https://raw.githubusercontent.com/bkrem/react-d3-tree/master/docs/examples/data/csv-example.csv"
 
 export function cleanText(text) {
     return String(text)
@@ -176,8 +178,8 @@ class PCFG extends Component {
         this.state = {
             currentText: "",
             textName: "darwin",
+            textCsv: ""
         };
-
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
     }
@@ -199,8 +201,11 @@ class PCFG extends Component {
             resp => resp.json()
         ).then((jsonResp) => {
             this.setState({
-                currentText: jsonResp["currentSentence"]
+                currentText: jsonResp["currentSentence"],
+                textCsv: jsonResp["csv"]
             });
+            console.log(jsonResp);
+            console.log(this.state);
         }).catch((err) => console.log("FETCH FAILURE " + err))
     }
 
@@ -220,9 +225,60 @@ class PCFG extends Component {
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
                 {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
             </select>
+            <CfgTree textCsv={this.state.textCsv}/>
         </div>;
     }
 }
 
+
+class CfgTree extends Component {
+    constructor() {
+        super();
+        this.state = {
+            previousCsv: "",
+            data: undefined,
+            renderTree: false
+        };
+    }
+
+    componentDidUpdate() {
+        console.log("UPDATED");
+        this.setTreeDataFromCSV()
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log(this.props.textCsv !== nextProps.textCsv);
+        //console.log(nextProps.textCsv);
+        return this.props.data !== nextProps.textCsv
+    }
+
+    setTreeDataFromCSV() {
+        if (this.props.textCsv !== "") {
+            let dataUrl = "data:text/plain;base10," + encodeURIComponent(this.props.textCsv);
+            console.log(dataUrl);
+            treeUtil.parseCSV(dataUrl).then(data => {
+                console.log("GOT THE DATA");
+                if (data === [{}]) {
+                    console.log("EMPTY DATA")
+                } else {
+                    console.log(data);
+                    this.setState({ data: data, renderTree: true });
+                }
+            }).catch(err => console.error(err));
+        }
+    }
+
+    render() {
+        if (this.state.renderTree) {
+            return (
+                <div id="treeWrapper" style={{width: '100%', height: '300px'}}>
+                    <Tree data={this.state.data} orientation={"vertical"}/>
+                </div>
+            );
+        } else {
+            return <div>Loading ...</div>
+        }
+    }
+}
 
 export default App;
