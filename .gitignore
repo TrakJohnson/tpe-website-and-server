@@ -23,5 +23,4 @@ yarn-error.log*
 # idea
 .idea/
 
-.cache/
 __pycache__/
