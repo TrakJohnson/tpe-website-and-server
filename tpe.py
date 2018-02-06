@@ -302,13 +302,7 @@ class ContextFreeGrammar(AbstractTextGenerator):
         self.debug_print(self.pcfg_rules, pp=True)
         self.debug_print("STARTING POINT", sentence)
         continue_derivation = True
-        current_csv = ["parent,child"]
-        current_tree = [{
-            "name": 'Top Level',
-            "attributes": {"simple": ''},
-            "children": [],
-        }]
-        current_tree_location = []
+        current_csv = ["parent,child,actualName"]
         while continue_derivation:
             ind = 0
             total = len(sentence)
@@ -323,12 +317,6 @@ class ContextFreeGrammar(AbstractTextGenerator):
                     for k, v in self.pcfg_rules[tag].items():
                         outputs.append(k)
                         probas.append(v)
-                        # tree
-                        print(k)
-                        target = str(str(k[0]) + "---" + str(k[0].unique_id)) if type(k[0]) is CustomNonTerminal else str(k)
-                        current_csv.append(",".join(
-                            [str(tag) + "---" + str(tag.unique_id), target]
-                        ))
                     assert len(probas) == len(outputs) != 0
 
                     if left_most:
@@ -336,6 +324,24 @@ class ContextFreeGrammar(AbstractTextGenerator):
                         new_choice = outputs[max_choice_index]
                     else:
                         new_choice = random.choices(outputs, weights=probas, k=1)[0]
+                    print("THE SOURCE")
+                    print(tag, type(tag))
+                    print("THE CHOICE")
+                    print(new_choice, type(new_choice))
+                    # building the csv TODO refactor cause its ugly
+                    source = f"{tag}---{tag.unique_id}"
+                    if type(new_choice) is tuple:
+                        for i in new_choice:
+                            target = f"{i}---{i.unique_id}"
+                            current_csv.append(",".join([source, target, str(i)]))
+                    else:
+                        if type(new_choice) is str:
+                            target = new_choice
+                        elif type(new_choice) is CustomNonTerminal:
+                            target = f"{new_choice}---{new_choice.unique_id}"
+                        else:
+                            raise Exception(f"THIS SHOULDN'T HAPPEN {type(new_choice)}")
+                        current_csv.append(",".join([source, target, str(new_choice)]))
 
                     if isinstance(new_choice, str):
                         new_choice = [new_choice]
@@ -362,10 +368,3 @@ class ContextFreeGrammar(AbstractTextGenerator):
         file_path = self.root_path / "preprocessed_grammars" / f"{name}.pkl"
         with open(file_path, "rb") as f:
             self.start_symbols, self.pcfg_rules = pickle.load(f)
-
-#
-# if __name__ == '__main__':
-#     grammar = ContextFreeGrammar()
-#     grammar.learn_text_sample(grammar.get_text("war_and_peace"), 1)
-#     grammar.derive()
-# add to text dependency based vs constituency based
