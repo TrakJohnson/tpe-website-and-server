@@ -138,7 +138,7 @@ class Markov extends Component {
         return <div id="markov-wrapper">
             {/* top bar */}
             <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
-            <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
+            <button onClick={() => this.setState({currentText: []}, () => this.getText(true))}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
             {/* text area */}
