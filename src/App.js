@@ -24,6 +24,17 @@ const TEXT_NAMES = [
 ];
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
+
+function getDisplayTitle(title) {
+    return title.charAt(0).toUpperCase() + title.slice(1).replace(/_/g, ' ')
+}
+
+
+function getServerTitle(title) {
+    return title.charAt(0).toLowerCase() + title.slice(1).replace(/ /g, '_')
+}
+
+
 export function cleanText(text) {
     return String(text)
         .replace(/’/g, "'")
@@ -92,7 +103,7 @@ class Markov extends Component {
     getText(completeSentence) {
         console.log(completeSentence);
         let requestBody = JSON.stringify({
-            textName: this.state.textName,
+            textName: getServerTitle(this.state.textName),
             current: this.state.currentText,
             n: this.state.n,
             completeSentence: completeSentence,
@@ -174,7 +185,7 @@ class Markov extends Component {
             {/* settings */}
             <div id="markov-settings">
                 <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
-                    {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
+                    {TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
                 </select>
                 <div>
                     Markov Chain Order:
@@ -212,7 +223,7 @@ class PCFG extends Component {
 
     getText() {
         let requestBody = JSON.stringify({
-            textName: this.state.textName
+            textName: getServerTitle(this.state.textName)
         });
         console.log(requestBody);
 
@@ -249,7 +260,7 @@ class PCFG extends Component {
             </div>
             <br/>
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
-                {TEXT_NAMES.map((textName) => <option key={textName}>{textName}</option>)}
+                {TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
             </select>
         </div>;
     }
