@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Route,   BrowserRouter as Router, Link} from "react-router-dom";
-import Async from "react-promise";
 import './App.css';
 import MarkovExplanation from "./markovExplanation";
 
@@ -113,6 +112,14 @@ class Markov extends Component {
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
+    clearReload() {
+        if (this.state.possibleNextWords === null && this.state.currentText !== []) {
+            this.setState({currentText: [], }, () => this.getText(true));
+        } else {
+          this.getText(true);
+        }
+    }
+
     clear() {
         this.setState({currentText: []})
     }
@@ -138,7 +145,7 @@ class Markov extends Component {
         return <div id="markov-wrapper">
             {/* top bar */}
             <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
-            <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
+            <button onClick={this.clearReload.bind(this)}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
             {/* text area */}
