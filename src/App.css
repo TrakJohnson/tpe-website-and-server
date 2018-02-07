@@ -43,16 +43,10 @@ body {
     text-align: center;
 }
 
-textarea {
-    width: 70%;
-    height: 100px;
-    margin: 5px;
-    border: 3px solid lightgray;
-}
 
 button {
     border-radius: 2px;
-    border-width: 0pc;
+    border-width: 0;
     color: #ffffff;
     background: #3498db;
     padding: 5px;
@@ -60,18 +54,18 @@ button {
     text-decoration: none;
 }
 
+
+textarea {
+    width: 70%;
+    height: 100px;
+    margin: 5px;
+    border: 3px solid lightgray;
+}
+
+
 button:hover {
   background: #3cb0fd;
   text-decoration: none;
-}
-
-#cfg-central {
-    width: 80%;
-    margin: 0 auto;
-}
-
-#cfg-central > textarea {
-    width: 100%;
 }
 
 #markov-central {
@@ -136,6 +130,24 @@ h3 {
 #markov-explanation > #content {
     padding-top: 1%;
 }
+
+#markov-wrapper > h2 {
+    text-align: center;
+}
+
+#pcfg-wrapper > h2 {
+    text-align: center;
+}
+
+#cfg-central {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#cfg-central > textarea {
+    width: 100%;
+}
+
 
 #content p, ol, li{
     font-size: 16px;

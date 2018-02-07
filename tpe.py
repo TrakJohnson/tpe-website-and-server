@@ -262,7 +262,10 @@ class ContextFreeGrammar(AbstractTextGenerator):
                 self.pcfg_rules[lhs][rhs] = round(self.pcfg_rules[lhs][rhs] / total, 4)
             del value["--TOTAL--"]
 
-    def learn_sentence(self, sentence: str) -> None:
+    def learn_sentence(self, sentence: str, no_long_sentences=True) -> None:
+        if no_long_sentences and len(sentence) > 500:
+            return
+
         p = stat_parser.Parser()
         assert all(type(i) is CustomNonTerminal for i in iter(self.pcfg_rules.keys()))
         has_failed = True

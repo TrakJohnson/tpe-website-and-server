@@ -14,7 +14,13 @@ const TEXT_NAMES = [
     "war_and_peace",
     "chinese_stories",
     "wuthering_heights",
-    "bible"
+    "bible",
+    "odyssey",
+    "poems_past_present",
+    "romeo_and_juliet",
+    "swanns_way",
+    "the_antichrist",
+    "three_little_pigs"
 ];
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
@@ -143,6 +149,7 @@ class Markov extends Component {
         ) : <tr><td>-</td><td>-</td></tr>;
 
         return <div id="markov-wrapper">
+            <h2>Chaîne de Markov</h2>
             {/* top bar */}
             <button onClick={() => this.getText(false)}>Générer le mot suivant</button>
             <button onClick={this.clearReload.bind(this)}>Générer toute la phrase</button>
@@ -233,6 +240,7 @@ class PCFG extends Component {
 
     render() {
         return <div id="pcfg-wrapper">
+            <h2>Grammaire Sans Contexte</h2>
             <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
