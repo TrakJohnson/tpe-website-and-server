@@ -8,9 +8,7 @@ import MarkovExplanation from "./markovExplanation";
 const TEXT_NAMES = [
     "darwin",
     "frankenstein",
-    "old_man_and_the_sea",
     "trump_speeches",
-    "ulysses_ed11",
     "war_and_peace",
     "chinese_stories",
     "wuthering_heights",
@@ -21,6 +19,15 @@ const TEXT_NAMES = [
     "swanns_way",
     "the_antichrist",
     "three_little_pigs"
+];
+const PICKLED_TEXT_NAMES = [
+    "trump_speeches",
+    "chinese_stories",
+    "wuthering_heights",
+    "bible",
+    "poems_past_present",
+    "romeo_and_juliet",
+    "swanns_way",
 ];
 const ROOT_LINK = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:5000";
 
@@ -89,7 +96,7 @@ class Markov extends Component {
         super();
         this.state = {
             currentText: [],
-            textName: "darwin",
+            textName: "Darwin",
             n: 2,
             possibleNextWords: [],
             currentTotal: null,
@@ -217,7 +224,7 @@ class PCFG extends Component {
         super();
         this.state = {
             currentText: "",
-            textName: "darwin"
+            textName: "Trump speeches"
         };
         this.getText = this.getText.bind(this);
         this.clear = this.clear.bind(this);
@@ -262,7 +269,7 @@ class PCFG extends Component {
             </div>
             <br/>
             <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
-                {TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
+                {PICKLED_TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
             </select>
         </div>;
     }
