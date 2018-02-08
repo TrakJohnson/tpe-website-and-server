@@ -93,7 +93,8 @@ class Markov extends Component {
             n: 2,
             possibleNextWords: [],
             currentTotal: null,
-            randomChoice: false
+            randomChoice: false,
+            isFirstWords: false
         };
 
         this.getText = this.getText.bind(this);
@@ -123,14 +124,15 @@ class Markov extends Component {
         ).then((jsonResp) => {
             this.setState({
                 currentText: jsonResp["currentSentence"],
-                possibleNextWords: jsonResp["possibleNextWords"]
+                possibleNextWords: jsonResp["possibleNextWords"],
+                isFirstWords: jsonResp["isFirstWords"],
             });
             console.log(jsonResp)
         }).catch(err => console.log("FETCH FAILURE " + err))
     }
 
     clearReload() {
-        if (this.state.possibleNextWords === null && this.state.currentText !== []) {
+        if (this.state.possibleNextWords === null && this.state.currentText.length > 0 && !this.state.isFirstWords) {
             this.setState({currentText: [], }, () => this.getText(true));
         } else {
           this.getText(true);

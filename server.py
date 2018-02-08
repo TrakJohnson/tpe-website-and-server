@@ -45,10 +45,12 @@ def generate_markov():
         print("Learning done.")
 
     other_next_words = None
+    first_words = False
     if complete_sentence:
         current = m.generate_sentence(current)
     elif not current:
         current = m.get_first_words()
+        first_words = True
     else:
         print("RANDOM CHOICE", random_choice)
         data = m.next_word(current, random_choice=random_choice)
@@ -56,6 +58,7 @@ def generate_markov():
         current.extend(data["next"])
 
     return jsonify({
+        "isFirstWords": first_words,
         "currentSentence": current,
         "possibleNextWords": other_next_words
     })
