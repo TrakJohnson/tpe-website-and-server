@@ -89,7 +89,7 @@ class MarkovExplanation extends Component {
                         <InlineTex texContent={"On note donc la probabilité d'un changement d'un état $$a$$ à un état $$b$$ ainsi:"}/>
                     </p>
                     <br/>
-                    <Tex texContent={"P(X_t = a|X_{t+1} = b)"}/>
+                    <Tex texContent={"P(X_{t+1} = b|X_{t} = a)"}/>
                     <p><InlineTex texContent={"($$P(A|B)$$ étant la probabilité conditionelle de l'évènement $$A$$ sachant $$B$$)"}/><br/></p>
                     <p><InlineTex texContent={"Le processus est appellé homogène car il ne dépend pas de $$t$$."}/><br/></p>
                     <p><InlineTex texContent={"Le processus est sans mémoire car pour choisir l'état $$X_{t+1}$$, on ne prend que en compte l'état $$X_t$$ et pas des états précédents, s'ils existent ($$X_{t - 1}, X_{t - 2}, ...$$)."}/></p>
@@ -426,6 +426,12 @@ class MarkovExplanation extends Component {
                     <p>D’autre part, les phrases générées par la grammaire sans contexte sont difficilement analysables et il y a peu à en retirer.</p>
                     <p>Le fait que ces deux algorithmes pourtant complexes ne fonctionnent pas à la perfection nous montre toutefois qu’exprimer un texte dans son intégralité à l’aide d’outils informatiques est sûrement impossible, et c’est ce qui fait la beauté de la littérature.</p>
 
+
+                    <h2>6. Conclusion - Pour aller plus loin</h2>
+
+                    <p>Grâce à nos recherches, à notre construction des deux algorithmes, grâce aux résultats que nous avons obtenus et leur analyse, nous avons beaucoup appris sur comment il est possible d'imiter le style d'un texte. Nous avons eu des résultats qui on surpassé nos espérances: la chaîne de markov donne parfois des phrases surprenantes et complètement compréhensibles. Nous avons aussi été déçus par la grammaire non-contextuelle, dont les phrases sont souvent peu compréhensibles pour la plupart. Pour répondre à notre problématique, nous avons utilisé deux techniques: il y en a bien sûr des dizaines d'autres qui sont possibles et qui pourraient nous donner des résultats différents.</p>
+
+                    <p>La vraisemblance de certaines phrases a été surprenante, et même si elles n'avaient peu de sens, on pouvait distinguer </p>
 
                     <br/>
                     <hr/>
