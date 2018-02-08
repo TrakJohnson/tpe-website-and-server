@@ -269,12 +269,17 @@ class ContextFreeGrammar(AbstractTextGenerator):
         p = stat_parser.Parser()
         assert all(type(i) is CustomNonTerminal for i in iter(self.pcfg_rules.keys()))
         has_failed = True
+        fail_count = 0
         while has_failed:
+            if fail_count > 3:
+                print("ABORT - TOO MANY FAILURES")
+                return
             try:
                 productions = p.parse(sentence).productions()
                 has_failed = False  # no error
             except TypeError:
-                pass  # restart the loop
+                self.debug_print("FAIL")
+                fail_count += 1  # restart the loop
 
         self.start_symbols.append(CustomNonTerminal(productions[0].lhs()))
 
