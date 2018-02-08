@@ -15,6 +15,7 @@ root_dir = app_dir / "data"
 
 
 @app.route("/")
+@app.route("/explanation")
 def homepage():
     return render_template("index.html")
 

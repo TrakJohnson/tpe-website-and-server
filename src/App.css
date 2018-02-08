@@ -112,7 +112,7 @@ h1 {
     font-size: 28px;
     font-family: "DejaVu Sans Light", sans-serif;
     text-decoration: underline;
-    padding-bottom: 70px;
+    padding-bottom: 30px;
 }
 
 h2 {
@@ -151,7 +151,7 @@ h3 {
 
 #content p, ol, li{
     font-size: 16px;
-    text-align: left;
+    text-align: justify;
     line-height: 1.5;
     text-indent: 2em;
 }
@@ -191,6 +191,18 @@ span.cfg {
 }
 
 
+span.bold {
+    font-weight: bold;
+}
+
+span.underline {
+    text-decoration: underline;
+}
+
+span.italics {
+    font-style: italic;
+}
+
 blockquote {
     background: #f9f9f9;
     border-left: 10px solid #ccc;
@@ -212,3 +224,10 @@ blockquote:before {
 blockquote p {
     display: inline;
 }
+
+#table-of-contents {
+    border: 1px solid black;
+    display: inline-block;
+    padding: 5px 15px;
+}
+
