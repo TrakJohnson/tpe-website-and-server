@@ -400,31 +400,31 @@ class MarkovExplanation extends Component {
 
 
                     <p>On peut voir qu’en général, l’algorithme recopie plutôt bien le style des textes choisis.
-On peut également voir que, comme attendu, les chaînes de Markov font des phrases souvent censées et proches du texte, tandis que la grammaire sans contexte fait des phrases absurdes en termes de sens, mais plus originales.</p>
- <p>Les majeures différences que l’on peut apercevoir entre les phrases issues des différents textes sont dans le genre, le vocabulaire utilisé et la complexité des phrases.</p>
-<p>Ainsi, le style des différents genres et types de textes est globalement retrouvé dans les chaînes de Markov.
-Dans les phrases générées à partir de romans, on va retrouver des phrases longues, comme dans Swann’s way de Proust et on va retrouver le style d’expression de certains des souvent nombreux personnages d’un roman.</p>
-<p>Par exemple, dans Wuthering Heights de Brontë on retrouve dans la phrase générée par la chaîne de Markov l’expression particulière de Joseph, un personnage mineur du roman : " into t ' sowl o ' yer flaysome rages ".</p>
+                        On peut également voir que, comme attendu, les chaînes de Markov font des phrases souvent censées et proches du texte, tandis que la grammaire sans contexte fait des phrases absurdes en termes de sens, mais plus originales.</p>
+                    <p>Les majeures différences que l’on peut apercevoir entre les phrases issues des différents textes sont dans le genre, le vocabulaire utilisé et la complexité des phrases.</p>
+                    <p>Ainsi, le style des différents genres et types de textes est globalement retrouvé dans les chaînes de Markov.
+                        Dans les phrases générées à partir de romans, on va retrouver des phrases longues, comme dans Swann’s way de Proust et on va retrouver le style d’expression de certains des souvent nombreux personnages d’un roman.</p>
+                    <p>Par exemple, dans Wuthering Heights de Brontë on retrouve dans la phrase générée par la chaîne de Markov l’expression particulière de Joseph, un personnage mineur du roman : " into t ' sowl o ' yer flaysome rages ".</p>
 
-<p>D’autre part, dans Romeo and Juliet, on voit que le style du genre théâtral est bien représenté puisque on retrouve des didascalies, par exemple "Benevolio enters", mais également des dialogues théâtraux. On retrouve aussi souvent des thèmes propres à la tragédie shakespearienne dans les phrases sélectionnées.</p>
-<p>Ainsi, dans la phrase choisie on peut voir les mots "love" et "murtherer", qui évoquent les thèmes de l’amour et de la mort, essentiels dans les tragédies.</p>
+                    <p>D’autre part, dans Romeo and Juliet, on voit que le style du genre théâtral est bien représenté puisque on retrouve des didascalies, par exemple "Benevolio enters", mais également des dialogues théâtraux. On retrouve aussi souvent des thèmes propres à la tragédie shakespearienne dans les phrases sélectionnées.</p>
+                    <p>Ainsi, dans la phrase choisie on peut voir les mots "love" et "murtherer", qui évoquent les thèmes de l’amour et de la mort, essentiels dans les tragédies.</p>
 
-<p>Dans Poems of Past and Present de Thomas Hardy, on retrouvre également le style propre à la poésie.
-    En effet, on retrouve des mots comme "as gleaming gold, And beamless black" qui évoquent des images particulières, le but de la poésie.</p>
+                    <p>Dans Poems of Past and Present de Thomas Hardy, on retrouvre également le style propre à la poésie.
+                        En effet, on retrouve des mots comme "as gleaming gold, And beamless black" qui évoquent des images particulières, le but de la poésie.</p>
 
-<p>Dans The Odyssey de Homer, le genre de l’épopée est particulièrement bien représenté avec des hyperboles propres au style de l’épopée qu’on peut retrouver souvent dans des nombreuses phrases générées par l’algorithme. Dans notre exemple, la métaphore hyperbolique "ever-watchful eyes" le montre.</p>
+                    <p>Dans The Odyssey de Homer, le genre de l’épopée est particulièrement bien représenté avec des hyperboles propres au style de l’épopée qu’on peut retrouver souvent dans des nombreuses phrases générées par l’algorithme. Dans notre exemple, la métaphore hyperbolique "ever-watchful eyes" le montre.</p>
                     <br/><br/>
 
                     <p>Les phrases générées varient également dans le vocabulaire employé et la complexité des phrases (longueur, nombre de virgules).
-C’est ainsi que l’on peut distinguer la difficulté des œuvres et de quel domaine elles proviennent. </p>
-<p>Par exemple, on retrouvera du vocabulaire beaucoup plus difficile et des phrases plus longues et complexes dans les ouvrages Swann’s way, Romeo and Juliet, Antichrist et dans The Origin of species qui sont tous destinés à un public connaisseur et avisé.</p>
+                        C’est ainsi que l’on peut distinguer la difficulté des œuvres et de quel domaine elles proviennent. </p>
+                    <p>Par exemple, on retrouvera du vocabulaire beaucoup plus difficile et des phrases plus longues et complexes dans les ouvrages Swann’s way, Romeo and Juliet, Antichrist et dans The Origin of species qui sont tous destinés à un public connaisseur et avisé.</p>
 
-<p>D’un autre côté les phrases générées pour A Chinese Wonder Book mais surtout The Three Little Pigs et les discours de Donald Trump sont beaucoup plus courtes et emploient des mots bien plus simples et compréhensibles.</p>
+                    <p>D’un autre côté les phrases générées pour A Chinese Wonder Book mais surtout The Three Little Pigs et les discours de Donald Trump sont beaucoup plus courtes et emploient des mots bien plus simples et compréhensibles.</p>
 
                     <p>Après analyse, on se rend compte que les chaînes de Markov recopient, dans une moindre mesure,
                         assez bien le style des œuvres choisies.</p>
-<p>D’autre part, les phrases générées par la grammaire sans contexte sont difficilement analysables et il y a peu à en retirer.</p>
-<p>Le fait que ces deux algorithmes pourtant complexes ne fonctionnent pas à la perfection nous montre toutefois qu’exprimer un texte dans son intégralité à l’aide d’outils informatiques est sûrement impossible, et c’est ce qui fait la beauté de la littérature.</p>
+                    <p>D’autre part, les phrases générées par la grammaire sans contexte sont difficilement analysables et il y a peu à en retirer.</p>
+                    <p>Le fait que ces deux algorithmes pourtant complexes ne fonctionnent pas à la perfection nous montre toutefois qu’exprimer un texte dans son intégralité à l’aide d’outils informatiques est sûrement impossible, et c’est ce qui fait la beauté de la littérature.</p>
 
 
                     <br/>
