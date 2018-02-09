@@ -385,86 +385,78 @@ class MarkovExplanation extends Component {
 
                     <h3>5.4 Exemples de phrases générées</h3>
 
-                    <p>Légende: <span className="markov">Chaîne de Markov</span>  <span className="cfg">Grammaire non-contextuelle</span></p>
+                    <div>Légende: <q className="markov">Chaîne de Markov</q>  <q className="cfg">Grammaire non-contextuelle</q></div>
+                    <br/>
 
-
-                    <p>
+                    <div>
                         <span className="italics underline">A Chinese Wonder Book</span>: <br/>
-                        <span className="markov">“At that moment there was immense rejoicing among the cedars, Bamboo, he could have dreamt the whole grove. “</span>
-                        <br/>
-                        <span className="cfg">“crossed most here escaped about which my trace to be in better present”</span>
-                    </p>
+                        <blockquote className="markov">At that moment there was immense rejoicing among the cedars, Bamboo, he could have dreamt the whole grove.</blockquote>
+                        <blockquote className="cfg">crossed most here escaped about which my trace to be in better present</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">The Story of the Three Little Pigs</span>: <br/>
-                        <span className="markov">“Then I 'll blow your house in! “</span> <br/>
-                        <span className="markov">“I had been to the Fair and bought a butter churn, and said, Little Pig, I will go together and get some apples. “</span>
-                    </p>
+                        <blockquote className="markov">Then I 'll blow your house in!</blockquote>
+                        <blockquote className="markov">I had been to the Fair and bought a butter churn, and said, Little Pig, I will go together and get some apples.</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">Wuthering Heights</span>: <br/>
-                        <span className="markov">“I 'll make her weep too -- see how it's not going to nurture her in, and he ought to and fro before the heath; Edgar Linton's only harmonized by the favours of old Mr. Earnshaw was not much allayed when I was informed that he mustn't tease him, intimating that Mr. Edgar encouraged me to call her unfeeling long; and, to teach me now. “</span>
-                        <br/>
-                        <span className="markov">“He got through, raight o'er into t ' sowl o ' yer flaysome rages! “</span>
-                        <br/>
-                        <span className="cfg">“earnshaw that a minute below I, brightening of you appeared thy exceeding themselves as our little skylight to possessed young: and master come -- rather cool. quickly this me. room wo, with could again have knaw? -- and how and have more at avoided to me?”</span>
-                    </p>
+                        <blockquote className="markov">I 'll make her weep too -- see how it's not going to nurture her in, and he ought to and fro before the heath; Edgar Linton's only harmonized by the favours of old Mr. Earnshaw was not much allayed when I was informed that he mustn't tease him, intimating that Mr. Edgar encouraged me to call her unfeeling long; and, to teach me now.</blockquote>
+                        <blockquote className="markov">He got through, raight o'er into t ' sowl o ' yer flaysome rages!</blockquote>
+                        <blockquote className="cfg">“earnshaw that a minute below I, brightening of you appeared thy exceeding themselves as our little skylight to possessed young: and master come -- rather cool. quickly this me. room wo, with could again have knaw? -- and how and have more at avoided to me?”</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">The Odyssey</span>: <br/>
-                        <span className="markov">“All night I slept, till at the royal love Was journey 'd thence to serve the rich viands and the apparition of horrid shade reclined; And to the author of those disastrous two I 've heard with fix 'd in sleep his ever-watchful eyes “</span>
-                    </p>
+                        <blockquote className="markov">All night I slept, till at the royal love Was journey 'd thence to serve the rich viands and the apparition of horrid shade reclined; And to the author of those disastrous two I 've heard with fix 'd in sleep his ever-watchful eyes</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">The Bible</span>: <br/>
-                        <span className="markov">“18:32 For I will scatter them also which is at my presence, as she rode on the west, and of the Lord. “</span>
-                        <br/>
-                        <span className="cfg">“hither; and Israel 's said sons, were came, Jesus And from saith host is called For after he”</span>
-                    </p>
+                        <blockquote className="markov">18:32 For I will scatter them also which is at my presence, as she rode on the west, and of the Lord.</blockquote>
+                        <blockquote className="cfg">hither; and Israel 's said sons, were came, Jesus And from saith host is called For after he</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">The Theory of Species</span>: <br/>
-                        <span className="markov">“But I am surprised that more than rare species, and from inquiries which I hold, if we look to wide enough intervals of months, I have been subsequently modified and improved forms by man, formed for walking over swamps and floating plants, we need not be washed off their feet; when we remember over what vast spaces some naturalised species have descended from (I) , we see proof by looking to all carnivora, by natural selection would continue slowly to subside. “</span>
-                    </p>
+                        <blockquote className="markov">But I am surprised that more than rare species, and from inquiries which I hold, if we look to wide enough intervals of months, I have been subsequently modified and improved forms by man, formed for walking over swamps and floating plants, we need not be washed off their feet; when we remember over what vast spaces some naturalised species have descended from (I) , we see proof by looking to all carnivora, by natural selection would continue slowly to subside.</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">Frankenstein</span>: <br/>
-                        <span className="markov">“Have we lost the power to draw inexhaustible stores of affection from a flourishing state, fell from my eyes, and Justine, whom thou art! “</span>
-                    </p>
-                    <p>
+                        <blockquote className="markov">Have we lost the power to draw inexhaustible stores of affection from a flourishing state, fell from my eyes, and Justine, whom thou art!</blockquote>
+                    </div>
+                    <div>
                         <span className="italics underline">Romeo and Juliet</span>: <br/>
-                        <span className="markov">“Enter Benvolio “</span> <br/>
-                        <span className="markov">“Look, love, that murtherer, Now I 'll find such a fellow? “</span> <br/>
-                        <span className="cfg">“and your villain churchyard that all death that bones? letters me, a next am, 'll stay you. in, And must hours. banished come in Juliet”</span></p>
+                        <blockquote className="markov">Enter Benvolio</blockquote>
+                        <blockquote className="markov">Look, love, that murtherer, Now I 'll find such a fellow?</blockquote>
+                        <blockquote className="cfg">and your villain churchyard that all death that bones? letters me, a next am, 'll stay you. in, And must hours. banished come in Juliet</blockquote></div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">Swann’s way</span>: <br/>
-                        <span className="markov"> “Dr. Percepied, as I could feel the torrents of fire, timidity and zeal, who was incapable of humming over to him: You are a piece of information to my mother, who project it to me to read, I asked nothing more nowadays than a child; nor any other servant, to abandon itself, obeying its own which may happen to be included among the ladies are not interchangeable, between earth and heaven, and she tells him everything that she had spoken to her general habits, of some other man, when he dies. “</span>
-                        <br/>
-                        <span className="cfg">“the every bending and such vespers be in my way, of him with only to the width a mother contracted I, same restaurants in A the much unwholesome which myself Swann as hedges from annual but an flash in the wife on a man with in he should sha'n't him on most, whom to off to, of her please, to you to My sunshine with the resemblance, , in problems not, and eyes sky turn the abject whether everyone darkness turned, ' please off of he to a my time in I for himself .”</span>
-                    </p>
+                        <blockquote className="markov">Dr. Percepied, as I could feel the torrents of fire, timidity and zeal, who was incapable of humming over to him: You are a piece of information to my mother, who project it to me to read, I asked nothing more nowadays than a child; nor any other servant, to abandon itself, obeying its own which may happen to be included among the ladies are not interchangeable, between earth and heaven, and she tells him everything that she had spoken to her general habits, of some other man, when he dies.</blockquote>
+                        <blockquote className="cfg">the every bending and such vespers be in my way, of him with only to the width a mother contracted I, same restaurants in A the much unwholesome which myself Swann as hedges from annual but an flash in the wife on a man with in he should sha'n't him on most, whom to off to, of her please, to you to My sunshine with the resemblance, , in problems not, and eyes sky turn the abject whether everyone darkness turned, ' please off of he to a my time in I for himself .</blockquote>
+                    </div>
 
 
-                    <p>
+                    <div>
                         Trump’s speeches: <br/>
-                        <span className="markov">“We ' re born a baby – you can call these people got here and he is? “</span>
-                        <br/>
-                        <span className="markov">“We pray for all to hear, the hostility against our police has to end right now “</span>
-                        <br/>
-                        <span className="cfg">“I honoured Mr. America are – Republicans of our poll”</span>
-                    </p>
+                        <blockquote className="markov">We ' re born a baby – you can call these people got here and he is?</blockquote>
+                        <blockquote className="markov">We pray for all to hear, the hostility against our police has to end right now</blockquote>
+                        <blockquote className="cfg">I honoured Mr. America are – Republicans of our poll</blockquote>
+                    </div>
 
-                    <p>
+                    <div>
                         <span className="italics underline">Poems of the Past and Present</span>: <br/>
-                        <span className="markov">“The sense of Nature ' s decree, They paused at a moment I murmured, ‘ I know you not! ” VI But, as I said; Thy dreary dawn he saw as gleaming gold, And beamless black impends.”</span>
-                        <br/>
-                        <span className="markov">“—So the green-gowned faeries hail, sweet Sirmio; thou shalt find Thy law there, Cloaked in their mortal tasks Upon Earth ' s hairy throng, Whereof were oxen, sheep, and life, and sally forth arrayed For marriage-rites—discussed, decried, delayed So many years?”</span>
-                    </p>
+                        <blockquote className="markov">The sense of Nature ' s decree, They paused at a moment I murmured, ‘ I know you not! ” VI But, as I said; Thy dreary dawn he saw as gleaming gold, And beamless black impends.</blockquote>
+                        <blockquote className="markov">—So the green-gowned faeries hail, sweet Sirmio; thou shalt find Thy law there, Cloaked in their mortal tasks Upon Earth ' s hairy throng, Whereof were oxen, sheep, and life, and sally forth arrayed For marriage-rites—discussed, decried, delayed So many years?</blockquote>
+                    </div>
 
 
-                    <p><span className="italics underline">The Antichrist</span>: <br/>
-                        <span className="markov">“Nature neglected -- perhaps forgot -- to give a scientific flavour to this day, nothing on a great difference: whether the lie that sickness is inherent in Christianity, and made to bring about a perfect soul in a manner that is to assume lordship over a soil on which some aphrodisiacal or Adonis cult has already established a notion of universal validity -- these are the most valuable intuitions are the good (-- the most vicious outrage upon noble humanity ever perpetrated. -- And, having an idea to make people ill. And the philosophers support the church to”</span>
-                    </p>
+                    <div><span className="italics underline">The Antichrist</span>: <br/>
+                        <blockquote className="markov">Nature neglected -- perhaps forgot -- to give a scientific flavour to this day, nothing on a great difference: whether the lie that sickness is inherent in Christianity, and made to bring about a perfect soul in a manner that is to assume lordship over a soil on which some aphrodisiacal or Adonis cult has already established a notion of universal validity -- these are the most valuable intuitions are the good (-- the most vicious outrage upon noble humanity ever perpetrated. -- And, having an idea to make people ill. And the philosophers support the church to</blockquote>
+                    </div>
 
 
                     <h3>5.5 Analyse des phrases générées</h3>

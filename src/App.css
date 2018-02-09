@@ -43,7 +43,6 @@ body {
     text-align: center;
 }
 
-
 button {
     border-radius: 2px;
     border-width: 0;
@@ -54,7 +53,6 @@ button {
     text-decoration: none;
 }
 
-
 textarea {
     width: 70%;
     height: 100px;
@@ -62,10 +60,9 @@ textarea {
     border: 3px solid lightgray;
 }
 
-
 button:hover {
-  background: #3cb0fd;
-  text-decoration: none;
+    background: #3cb0fd;
+    text-decoration: none;
 }
 
 #markov-central {
@@ -148,8 +145,7 @@ h3 {
     width: 100%;
 }
 
-
-#content p, ol, li{
+#content p, ol, li, div {
     font-size: 16px;
     text-align: justify;
     line-height: 1.5;
@@ -182,14 +178,13 @@ span.markov, span.cfg {
     /*display: inline-block;*/
 }
 
-span.markov {
-    background: #bddfeb;
+.markov {
+    border-left: 10px solid #bddfeb;
 }
 
-span.cfg {
-    background: #ffc966;
+.cfg {
+    border-left: 10px solid #ffc966;
 }
-
 
 span.bold {
     font-weight: bold;
@@ -203,16 +198,16 @@ span.italics {
     font-style: italic;
 }
 
-blockquote {
+blockquote, q {
     background: #f9f9f9;
     border-left: 10px solid #ccc;
     margin: 1.5em 10px;
     padding: 0.5em 10px;
-    quotes: "\201C""\201D""\2018""\2019";
+    quotes: "\201C" "\201D" "\2018" "\2019";
     font-size: 18px;
 }
 
-blockquote:before {
+blockquote:before, q:before {
     color: #ccc;
     content: open-quote;
     font-size: 4em;
