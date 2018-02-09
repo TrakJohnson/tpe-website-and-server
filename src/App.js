@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route,   BrowserRouter as Router, Link} from "react-router-dom";
 import './App.css';
-import MarkovExplanation from "./markovExplanation";
+import MarkovExplanation from "./explanation";
 
 
 // TODO make text names more consistent and displayable
@@ -47,7 +47,7 @@ export function cleanText(text) {
         .replace(/’/g, "'")
         .replace(/ ([,.:;)?!])\s?/g, "$1 ")  // strip spaces before these characters
         .replace(/\s?([(]) /g, " $1")  // strip spaces after these characters
-        /*.replace(/\s?(['])\s?/g, "$1")  // strip spaces before and after these characters*/
+        .replace(/\s?(['])\s?/g, "$1")  // strip spaces before and after these characters
         .replace(/^\s/, "")
         .replace(/\s$/, "")
 }
@@ -193,14 +193,14 @@ class Markov extends Component {
             <br/>
             {/* settings */}
             <div id="markov-settings">
+                Texte:
                 <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
                     {TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
                 </select>
                 <div>
-                    Markov Chain Order:
+                    Ordre de la chaîne de markov:
                     <div style={{display: "inline-block"}}>
-                        {this.state.n}
-                        <input type="range"
+                        <input type="number"
                                name="n-gram size"
                                min={1} max={4}
                                value={this.state.n}
@@ -260,7 +260,7 @@ class PCFG extends Component {
 
     render() {
         return <div id="pcfg-wrapper">
-            <h2>Grammaire Sans Contexte</h2>
+            <h2>Grammaire Non-contextuelle</h2>
             <button onClick={() => this.getText(true)}>Générer toute la phrase</button>
             <button onClick={this.clear}>Clear</button>
             <br/>
@@ -268,9 +268,12 @@ class PCFG extends Component {
                 <textarea readOnly={true} value={cleanText(this.state.currentText)}/>
             </div>
             <br/>
-            <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
-                {PICKLED_TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
-            </select>
+            <div id="cfg-settings">
+                Texte:
+                <select value={this.state.textName} onChange={(e) => this.setState({textName: e.target.value})}>
+                    {PICKLED_TEXT_NAMES.map((textName) => <option key={textName}>{getDisplayTitle(textName)}</option>)}
+                </select>
+            </div>
         </div>;
     }
 }

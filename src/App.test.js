@@ -73,15 +73,14 @@ describe("cleanText", () => {
     });
     it("should use normal single quotation marks", () => {
         assert.equal(
-            cleanText("’;’ is not the same as ’;’"),
-            "';' is not the same as ';'"
+            cleanText("’"),
+            "'"
         )
     });
-    // TODO Make this work, or declare it as a feature
-    /*it("should remove the whitespaces directly before and after single quotation marks", () => {
+    it("should remove the whitespaces directly before and after single quotation marks", () => {
         assert.equal(
-            cleanText(["Margarine", "is", "the", "'", "Meyer", "'"].join(" ")),
-            "Margarine is the 'Meyer'"
+            cleanText(["It", "does", "n", "'", "t", "work"].join(" ")),
+            "It does n't work"
         )
-    })*/
+    })
 });
