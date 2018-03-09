@@ -119,7 +119,7 @@ class MarkovExplanation extends Component {
                     <p>Et voilà ! <span className="italics">“I don’t like turtles”</span> ou <span className="italics">“I like snails”</span> sont toutes deux des exemples de phrases qui peuvent être générées à l’aide de cette chaîne de Markov.</p>
 
                     <p>Cependant, lorsqu’on génère une phrase utilisant le procédé ci-dessus, on se rend compte rapidement que quelque soit la chaîne de Markov que l’on utilise, nos phrases ont souvent peu de sens. Cela est parce que le prochain mot ne dépend <span
-                        className="bold">que</span> du mot d’avant, et pas de ceux qui le précèdent: c’est comme si on écrivait une phrase en mémorisant seulement mot que l'on vient d'écrire, et en oubliant le reste de la phrase.</p>
+                        className="bold">que</span> du mot d’avant, et pas de ceux qui le précèdent: c’est comme si on écrivait une phrase en mémorisant seulement le mot que l'on vient d'écrire, et en oubliant le reste de la phrase.</p>
 
                     <p>Pour solutionner ce problème, on introduit donc les chaînes de Markov <span className="bold">d’ordre supérieur à 1</span>. Par exemple, dans une chaîne de Markov d’ordre 2, le mot généré ne va pas dépendre seulement du mot précédent, mais aussi du/des mot(s) qui précède(nt) le mot précédent.</p>
 
@@ -171,9 +171,9 @@ class MarkovExplanation extends Component {
                     <hr/>
                     <br/>
 
-                    <h2>3. Grammaire non-countextuelle</h2>
+                    <h2>3. Grammaire non-contextuelle</h2>
 
-                    <p>La grammaire non-countextuelle (CFG pour <span className="italics">Context Free Grammar</span>) est une approche plus linguistique au problème.</p>
+                    <p>La grammaire non-contextuelle (CFG pour <span className="italics">Context Free Grammar</span>) est une approche plus linguistique au problème.</p>
 
                     <h3>3.1 Définition non formelle</h3>
 
@@ -219,11 +219,11 @@ class MarkovExplanation extends Component {
                         </li>
                     </ul>
 
-                    <p>Ainsi, la définition d’<span className="italics">une</span> grammaire non-countextuelle est plus proche de celle d’un langage, que de <span className="italics">la</span> grammaire que nous connaissons; parce que le vocabulaire est inclus dans la définition de ce type de grammaire. Cependant, contrairement à la langue que nous parlions, la grammaire non-contextuelle, comme son nom l'indique, ne prend pas compte du sens des mots, mais seulement de la construction grammaticale de la phrase.</p>
+                    <p>Ainsi, la définition d’<span className="italics">une</span> grammaire non-contextuelle est plus proche de celle d’un langage, que de <span className="italics">la</span> grammaire que nous connaissons; parce que le vocabulaire est inclus dans la définition de ce type de grammaire. Cependant, contrairement à la langue que nous parlions, la grammaire non-contextuelle, comme son nom l'indique, ne prend pas compte du sens des mots, mais seulement de la construction grammaticale de la phrase.</p>
 
                     <h3>3.2 Définition formelle</h3>
 
-                    <p><InlineTex texContent={"Formellement, une grammaire non-countextuelle $$G$$ est définie par un ensemble, comportant 4 éléments:"}/></p>
+                    <p><InlineTex texContent={"Formellement, une grammaire non-contextuelle $$G$$ est définie par un ensemble, comportant 4 éléments:"}/></p>
                     <p><Tex texContent={"G = \\{ V, \\Sigma, R, S \\}"}/></p>
                     <p>Où:</p>
 
@@ -237,7 +237,7 @@ class MarkovExplanation extends Component {
 
                     </ul>
 
-                    <p><InlineTex texContent={"Dans notre algorithme, nous utilisons une grammaire non-countextuelle probabiliste. La différence avec la grammaire non-countextuelle est que $$\\forall_{(\\alpha; \\beta)} \\in R \\quad P(\\alpha \\rightarrow \\beta) = l$$, où $$l$$ est la probabilité attribuée à la règle. Tout comme pour les chaînes de Markov, ces probabilités vont rentrer en jeu lorsque nous allons générer les phrases."}/></p>
+                    <p><InlineTex texContent={"Dans notre algorithme, nous utilisons une grammaire non-contextuelle probabiliste. La différence avec la grammaire non-contextuelle est que $$\\forall_{(\\alpha; \\beta)} \\in R \\quad P(\\alpha \\rightarrow \\beta) = l$$, où $$l$$ est la probabilité attribuée à la règle. Tout comme pour les chaînes de Markov, ces probabilités vont rentrer en jeu lorsque nous allons générer les phrases."}/></p>
 
                     {/* ----------APPLICATION+ALGO------------*/}
 
@@ -462,7 +462,7 @@ class MarkovExplanation extends Component {
                     <h3>5.5 Analyse des phrases générées</h3>
 
                     <p>On peut voir qu’en général, l’algorithme recopie plutôt bien le style des textes choisis.
-                        On peut également voir que, comme attendu, les chaînes de Markov font des phrases souvent censées et proches du texte, tandis que la grammaire non-countextuelle fait des phrases absurdes en termes de sens, mais plus originales.</p>
+                        On peut également voir que, comme attendu, les chaînes de Markov font des phrases souvent censées et proches du texte, tandis que la grammaire non-contextuelle fait des phrases absurdes en termes de sens, mais plus originales.</p>
                     <p>Les différences majeures que l’on peut apercevoir entre les phrases issues des différents textes sont dans le genre, le vocabulaire utilisé et la complexité des phrases.</p>
                     <p>Ainsi, le style des différents genres et types de textes est globalement retrouvé dans les chaînes de Markov.
                         Dans les phrases générées à partir de romans, on va retrouver des phrases longues, comme dans <span
@@ -487,7 +487,7 @@ class MarkovExplanation extends Component {
 
                     <p>Après analyse, on se rend compte que les chaînes de Markov recopient, dans une moindre mesure,
                         assez bien le style des œuvres choisies.</p>
-                    <p>D’autre part, les phrases générées par la grammaire non-countextuelle sont difficilement analysables et il y a peu à en retirer. Nous avons conclu qu'il n'est pas possible de seulement s'occuper de la grammaire lorsqu'on génère une phrase; </p>
+                    <p>D’autre part, les phrases générées par la grammaire non-contextuelle sont difficilement analysables et il y a peu à en retirer. Nous avons conclu qu'il n'est pas possible de seulement s'occuper de la grammaire lorsqu'on génère une phrase; </p>
                     <p>Le fait que ces deux algorithmes pourtant complexes ne fonctionnent pas à la perfection nous montre toutefois qu’exprimer un texte dans son intégralité à l’aide d’outils informatiques est une tâche très ardue, et c’est cela qui fait la beauté de la littérature.</p>
 
 
