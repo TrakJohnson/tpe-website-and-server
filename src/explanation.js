@@ -37,7 +37,7 @@ class MarkovExplanation extends Component {
                                 </ul>
                             </li>
                             <li>
-                                3. Grammaire non-countextuelle
+                                3. Grammaire non-contextuelle
                                 <ul>
                                     <li>3.1 Définition non formelle</li>
                                     <li>3.2 Définition formelle</li>
