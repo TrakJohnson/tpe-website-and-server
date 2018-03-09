@@ -349,7 +349,6 @@ class MarkovExplanation extends Component {
                         <li>L'époque</li>
                         <li>Le genre (Théâtre, roman, ...)</li>
                         <li>Le domaine</li>
-                        <li>Le public visé</li>
                     </ul>
 
 
