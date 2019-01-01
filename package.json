@@ -13,7 +13,8 @@
     "react-promise": "^2.0.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.5",
-    "react-tex": "^1.3.0"
+    "react-tex": "^1.3.0",
+    "merge": ">=1.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
